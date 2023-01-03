@@ -1,3 +1,6 @@
+let rlSync = require('readline-sync');
+let number = rlSync.question("What number would you like to convert?\n");
+
 function convert(num){
   // convert the number to a roman numeral
   const conversion = {
@@ -15,6 +18,7 @@ function convert(num){
     IV: 4,
     I: 1,
   }
+
   let result = ""
 
 for ( let key in conversion) {
@@ -30,4 +34,4 @@ return result;
 
 }
 
-convert(4)
+convert(number)
