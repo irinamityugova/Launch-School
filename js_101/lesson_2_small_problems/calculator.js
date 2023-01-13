@@ -3,7 +3,7 @@
  *
  * Pseudocode:
  * Ask the user for a number
- * Ask the user for the operation
+ * Ask the user for the operand
  * Ask the user for the second number
  * Conduct the operation
  * Return the result
@@ -20,30 +20,25 @@
  *
  */
 
-const rlSync = require('readline-sync');
+import { config } from './config';
 
 const calculator = function calculator() {
-  console.log(`
-  |-------------------------------------------------|
-  |         Welcome to Console Calculator!          |
-  |-------------------------------------------------|
-  | Answer the following prompts to get the result. |
-  | You can reuse the result of operation.          |
-  | Press Ctrl-C to exit the application.           |
-  |-------------------------------------------------|`);
+  const language = config.language();
 
   let result;
   let input;
   let num1;
-  let operation;
+  let operand;
   let num2;
   let another;
   let useResult;
 
+  config[language].welcomeMessage();
+
   const requestInput = function requestInputFromUser() {
     if (result) {
       do {
-        useResult = rlSync.question('Continue with a result? y/n ');
+        useResult = config[language].useResult();
       } while (!useResult.match(/[yn]/));
 
       switch (useResult) {
@@ -52,41 +47,31 @@ const calculator = function calculator() {
           break;
         case 'n':
           result = 0;
-          num1 = rlSync.questionInt('Number: ');
+          num1 = config[language].getNum();
           break;
-        default: console.log('Incorrect input');
+        default: config[language].errMessage();
       }
     } else {
-      num1 = rlSync.questionInt('Number: ');
+      num1 = config[language].getNum();
     }
 
     do {
-      operation = rlSync.question('Operator: ');
-      if (!operation.match(/[+\-*/%^]/)) {
-        console.log(`
-|------------------------- ERROR ---------------------------|
-| ${operation} is not a registered mathematical operator.   |
-| Please select from the following commands:                |
-| + to add,                                                 |
-| - to subtract,                                            |
-| * to multiply,                                            |
-| / to divide,                                              |
-| % to get the remainder of the division,                   |
-| ^ to put previous number to the power of the next number. |
-|-----------------------------------------------------------|`);
+      operand = config[language].getOperator();
+      if (!operand.match(/[+\-*/%^]/)) {
+        config[language].invalidInput(operand);
       }
-    } while (!operation.match(/[+\-*/%^]/));
+    } while (!operand.match(/[+\-*/%^]/));
 
-    num2 = rlSync.questionInt('Number: ');
+    num2 = config[language].getNum();
 
     input = {
       num1,
       num2,
-      operation,
+      operand,
     };
   };
 
-  const produceResult = function produceResultOfAnOperation(a, b, oprtn) {
+  const produceResult = function produceResultOfAnoperand(a, b, oprtn) {
     switch (oprtn) {
       case '+': result = a + b; break;
       case '-': result = a - b; break;
@@ -96,15 +81,15 @@ const calculator = function calculator() {
       case '^': result = a ** b; break;
       default:
     }
-    console.log('Result =', result);
+    config[language].resultOutput(result);
     return result;
   };
 
   do {
     requestInput(result);
-    produceResult(input.num1, input.num2, input.operation);
+    produceResult(input.num1, input.num2, input.operand);
 
-    another = rlSync.question('Would you like to perform another operation? y/n ');
+    another = config[language].anotherInput();
   } while (another.match(/y/));
 };
 
