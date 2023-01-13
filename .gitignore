@@ -2,3 +2,5 @@
 db/*.sqlite3
 # Ignore local database
 db/
+# Ignore ESlint files
+.eslintrc.js
