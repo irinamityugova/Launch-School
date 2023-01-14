@@ -20,7 +20,7 @@
  *
  */
 
-import { config } from './config.js';
+import config from './config.js';
 
 const calculator = function calculator() {
   const language = config.language();

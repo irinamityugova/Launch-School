@@ -14,9 +14,11 @@ const config = {
 |-------------------------------------------------|`);
     },
     invalidInput: (operand) => {
-      console.log(`
+      const maxLineLength = '|------------------------- ERROR ---------------------------|'.length;
+      const paddingCount = maxLineLength - `|${operand} is not a registered mathematical operator.`.length - 1;
+      const message = `
 |------------------------- ERROR ---------------------------|
-| ${operand} is not a registered mathematical operator.${'|'.padStart(59 - `${operand} is not a registered mathematical operator.`.length, ' ')}
+| ${operand} is not a registered mathematical operator.${'|'.padStart(paddingCount, ' ')}
 | Please select from the following commands:                |
 | + to add,                                                 |
 | - to subtract,                                            |
@@ -25,7 +27,8 @@ const config = {
 | % to get the remainder of the division,                   |
 | ^ to put previous number to the power of the next number. |
 |-----------------------------------------------------------|
-`);
+`;
+      console.log(message)
     },
     resultOutput: (result) => {
       console.log('Result =', result);
@@ -48,9 +51,11 @@ const config = {
 |------------------------------------------------------------------|`);
     },
     invalidInput: (operand) => {
-      console.log(`
+      const maxLineLength = '|------------------------------ ERROR -------------------------------|'.length;
+      const paddingCount = maxLineLength - `|${operand} no es un operador matemático registrado.`.length - 1;
+      const message = `
 |------------------------------ ERROR -------------------------------|
-| ${operand} no es un operador matemático registrado.${'|'.padStart(68 - `${operand} no es un operador matemático registrado.`.length, ' ')}
+| ${operand} no es un operador matemático registrado.${'|'.padStart(paddingCount, ' ')}
 | Seleccione entre los siguientes comandos:                          |
 | + para agregar,                                                    |
 | - restar,                                                          |
@@ -59,7 +64,8 @@ const config = {
 | % para obtener el resto de la división,                            |
 | ^ para poner el número anterior a la potencia del siguiente número.|
 |--------------------------------------------------------------------|
-  `);
+  `;
+      console.log(message);
     },
     resultOutput: (result) => {
       console.log('Resultado =', result);
@@ -82,9 +88,11 @@ const config = {
 |------------------------------------------------------------|`);
     },
     invalidInput: (operand) => {
-      console.log(`
+      const maxLineLength = '|--------------------------- ОШИБКА ----------------------------|'.length;
+      const paddingCount = maxLineLength - `|${operand} не является зарегистрированным математическим оператором.`.length - 1;
+      const message = `
 |--------------------------- ОШИБКА ----------------------------|
-| ${operand} не является зарегистрированным математическим оператором.${'|'.padStart(63 - `${operand} не является зарегистрированным математическим оператором.`.length, ' ')}
+| ${operand} не является зарегистрированным математическим оператором.${'|'.padStart(paddingCount, ' ')}
 | Выберите одну из следующих команд:                            |
 | + добавить,                                                   |
 | - вычитать,                                                   |
@@ -93,7 +101,8 @@ const config = {
 | %, чтобы получить остаток от деления,                         |
 | ^ чтобы возвести предыдущее число в степень следующего числа. |
 |---------------------------------------------------------------|
-  `);
+  `
+      console.log(message);
     },
     resultOutput: (result) => {
       console.log('Результат =', result);
