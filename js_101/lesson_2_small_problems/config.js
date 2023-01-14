@@ -2,8 +2,9 @@ import rlSync from 'readline-sync';
 
 const config = {
   language: () => rlSync.question('| Select your language by entering a corresponding short:\n| "en" for English\n| "sp" for Spanish\n| "ru" for Russian\n'),
+
   en: {
-    welcomeMessage: () => {
+    printWelcomeMessage: () => {
       console.log(`
 |-------------------------------------------------|
 |         Welcome to Console Calculator!          |
@@ -13,7 +14,7 @@ const config = {
 | Press Ctrl-C to exit the application.           |
 |-------------------------------------------------|`);
     },
-    invalidInput: (operand) => {
+    printInputError: (operand) => {
       const maxLineLength = '|------------------------- ERROR ---------------------------|'.length;
       const paddingCount = maxLineLength - `|${operand} is not a registered mathematical operator.`.length - 1;
       const message = `
@@ -30,17 +31,18 @@ const config = {
 `;
       console.log(message)
     },
-    resultOutput: (result) => {
+    printResult: (result) => {
       console.log('Result =', result);
     },
-    useResult: () => rlSync.question('Continue with a result? y/n '),
+    chooseUseResult: () => rlSync.question('Continue with a result? y/n '),
     anotherInput: () => rlSync.question('Would you like to perform another operation? y/n '),
     getNum: () => rlSync.questionInt('Number: '),
     getOperator: () => rlSync.question('Operator: '),
-    errMessage: () => console.log('Incorrect input'),
+    printDefaultError: () => console.log('Incorrect input'),
   },
+
   sp: {
-    welcomeMessage: () => {
+    printWelcomeMessage: () => {
       console.log(`
 |------------------------------------------------------------------|
 |               ¡Bienvenido a Consola Calculadora!                 |
@@ -50,7 +52,7 @@ const config = {
 | Presione Ctrl-C para salir de la aplicación.                     |
 |------------------------------------------------------------------|`);
     },
-    invalidInput: (operand) => {
+    printInputError: (operand) => {
       const maxLineLength = '|------------------------------ ERROR -------------------------------|'.length;
       const paddingCount = maxLineLength - `|${operand} no es un operador matemático registrado.`.length - 1;
       const message = `
@@ -67,17 +69,18 @@ const config = {
   `;
       console.log(message);
     },
-    resultOutput: (result) => {
+    printResult: (result) => {
       console.log('Resultado =', result);
     },
-    useResult: () => rlSync.question('¿Continuar con un resultado? y/n '),
+    chooseUseResult: () => rlSync.question('¿Continuar con un resultado? y/n '),
     anotherInput: () => rlSync.question('¿Le gustaría realizar otra operación? y/n '),
     getNum: () => rlSync.questionInt('Número: '),
     getOperator: () => rlSync.question('Operador: '),
-    errMessage: () => console.log('Entrada incorrecta'),
+    printDefaultError: () => console.log('Entrada incorrecta'),
   },
+
   ru: {
-    welcomeMessage: () => {
+    printWelcomeMessage: () => {
       console.log(`
 |------------------------------------------------------------|
 |         Добро пожаловать в консольный калькулятор!         |
@@ -87,7 +90,7 @@ const config = {
 | Нажмите Ctrl-C, чтобы выйти из приложения.                 |
 |------------------------------------------------------------|`);
     },
-    invalidInput: (operand) => {
+    printInputError: (operand) => {
       const maxLineLength = '|--------------------------- ОШИБКА ----------------------------|'.length;
       const paddingCount = maxLineLength - `|${operand} не является зарегистрированным математическим оператором.`.length - 1;
       const message = `
@@ -104,14 +107,14 @@ const config = {
   `
       console.log(message);
     },
-    resultOutput: (result) => {
+    printResult: (result) => {
       console.log('Результат =', result);
     },
-    useResult: () => rlSync.question('Продолжить с результатом? y/n '),
+    chooseUseResult: () => rlSync.question('Продолжить с результатом? y/n '),
     anotherInput: () => rlSync.question('Хотите провести еще одну операцию? y/n '),
     getNum: () => rlSync.questionInt('Число: '),
     getOperator: () => rlSync.question('Оператор: '),
-    errMessage: () => console.log('Неверный ввод'),
+    printDefaultError: () => console.log('Неверный ввод'),
   },
 };
 

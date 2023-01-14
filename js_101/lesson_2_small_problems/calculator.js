@@ -7,8 +7,9 @@
  * Ask the user for the second number
  * Conduct the operation
  * Return the result
- * Ask the user to continue with another operation or cancel the result to 0
- * Escape the application with a word "exit" at any point
+ * Ask the user to continue with another operation
+ * Ask the use if he/she wants to continue using result for the next operation
+ * Escape the application with Ctrl-C
  *
  * Test cases:
  * - Simple algorithmic expressions (+, -, *, /, ^, %)
@@ -24,43 +25,51 @@ import config from './config.js';
 
 const calculator = function calculator() {
   const language = config.language();
+  config[language].printWelcomeMessage();
 
-  let result;
-  let input;
-  let num1;
-  let operand;
-  let num2;
-  let another;
   let useResult;
-
-  config[language].welcomeMessage();
-
-  const requestInput = function requestInputFromUser() {
-    if (result) {
-      do {
-        useResult = config[language].useResult();
+  let result;
+  let num1;
+  const chooseUseResult = function chooseUseResult() {
+    do {
+        useResult = config[language].chooseUseResult();
       } while (!useResult.match(/[yn]/));
 
-      switch (useResult) {
-        case 'y':
-          num1 = result;
-          break;
-        case 'n':
-          result = 0;
-          num1 = config[language].getNum();
-          break;
-        default: config[language].errMessage();
-      }
+    switch (useResult) {
+      case 'y':
+        num1 = result;
+        break;
+      case 'n':
+        result = 0;
+        num1 = config[language].getNum();
+        break;
+      default: config[language].printDefaultError();
+    }
+  };
+
+  const getNum1 = function getNum1() {
+    if (result) {
+      chooseUseResult();
     } else {
       num1 = config[language].getNum();
     }
+  };
 
+  let operand;
+  let num2;
+  const getOperand = function getOperand() {
     do {
       operand = config[language].getOperator();
       if (!operand.match(/[+\-*/%^]/)) {
-        config[language].invalidInput(operand);
+        config[language].printInputError(operand);
       }
     } while (!operand.match(/[+\-*/%^]/));
+  };
+
+  let input;
+  const requestInput = function requestInput() {
+    getNum1();
+    getOperand();
 
     num2 = config[language].getNum();
 
@@ -71,20 +80,21 @@ const calculator = function calculator() {
     };
   };
 
-  const produceResult = function produceResultOfAnoperand(a, b, oprtn) {
-    switch (oprtn) {
+  const produceResult = function produceResultOfAnoperand(a, b, oprnd) {
+    switch (oprnd) {
       case '+': result = a + b; break;
       case '-': result = a - b; break;
       case '*': result = a * b; break;
       case '/': result = a / b; break;
       case '%': result = a % b; break;
       case '^': result = a ** b; break;
-      default:
+      default: config[language].printDefaultError()
     }
-    config[language].resultOutput(result);
+    config[language].printResult(result);
     return result;
   };
 
+  let another;
   do {
     requestInput(result);
     produceResult(input.num1, input.num2, input.operand);
