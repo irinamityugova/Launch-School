@@ -16,6 +16,7 @@
  * The winner is displayed.
  *
  * Bonus features WIP:
+ * - Add Lizard Spock
  * - Pick a username or create new
  * - Main menu: new game, rules, leaderboard
  * - Perform an animation of hands for 3 seconds,
@@ -85,15 +86,66 @@ Pick a number or the word from the list.`);
     return botChoice;
   };
 
-  const getWinner = function getWinner(userMove, botMove) {
+  const displayWinner = function displayWinner(userMove, botMove) {
     switch (userMove) {
-      case botMove: return 'tie';
+      case botMove:
+        console.log(`Whoops, ${userMove}s knokced each other out!`);
+        break;
+
       case 'rock':
-        return botMove === 'scissors' ? 'user' : 'bot';
+        if (botMove === 'scissors'
+          || botMove === 'lizard') {
+          console.log(`Your ${userMove} crushed the ${botMove}. Congrats!`);
+        } else if (botMove === 'spok') {
+          console.log(`Oh no, ${botMove} vaporizes your ${userMove}`);
+        } else if (botMove === 'paper') {
+          console.log(`Oh no, ${botMove} covers your ${userMove}`);
+        } break;
+
       case 'paper':
-        return botMove === 'rock' ? 'user' : 'bot';
+        if (botMove === 'rock') {
+          console.log(`Your ${userMove} covers the ${botMove}. Congrats!`);
+        } else if (botMove === 'spock') {
+          console.log(`Yes! Invincible ${userMove} disproves ${botMove}. Congrats!`);
+        } else if (botMove === 'lizard') {
+          console.log(`Oh no, ${botMove} eats your ${userMove}...`);
+        } else if (botMove === 'scissors') {
+          console.log(`Oh no, ${botMove} cuts your ${userMove}...`);
+        } break;
+
       case 'scissors':
-        return botMove === 'paper' ? 'user' : 'bot';
+        if (botMove === 'paper') {
+          console.log(`Your ${userMove} cuts the ${botMove}. Congrats!`);
+        } else if (botMove === 'lizard') {
+          console.log(`Your ${userMove} decapitates the ${botMove}. Congrats!`);
+        } else if (botMove === 'spock') {
+          console.log(`Oh no, ${botMove} smashes your ${userMove}...`);
+        } else if (botMove === 'rock') {
+          console.log(`Oh no, ${botMove} crushes your ${userMove}...`);
+        } break;
+
+      case 'spock':
+        if (botMove === 'rock') {
+          console.log(`Nice job, ${userMove} vaporizes the ${botMove}!`);
+        } else if (botMove === 'scissors') {
+          console.log(`Yep, ${userMove} smashes the ${botMove}!`);
+        } else if (botMove === 'lizard') {
+          console.log(`Oh no, ${botMove} poisons ${userMove}...`);
+        } else if (botMove === 'paper') {
+          console.log(`Oh no, ${botMove} disproves ${userMove}...`);
+        } break;
+
+      case 'lizard':
+        if (botMove === 'paper') {
+          console.log(`Your ${userMove} covers the ${botMove}. Congrats!`);
+        } else if (botMove === 'spock') {
+          console.log(`Your ${userMove} covers the ${botMove}. Congrats!`);
+        } else if (botMove === 'scissors') {
+          console.log(`Oh no, ${botMove} decapitates ${userMove}...`);
+        } else if (botMove === 'rock') {
+          console.log(`Oh no, ${botMove} crushes ${userMove}...`);
+        } break;
+
       default:
         console.log(`ERROR: Couldn't compute
         userMove = ${userMove}, botMove = ${botMove}`);
@@ -102,12 +154,11 @@ Pick a number or the word from the list.`);
   };
 
   const gameLoop = function gameLoop() {
-    const moves = ['rock', 'paper', 'scissors'];
+    const moves = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
     while (true) {
       const userMove = getUserChoice(moves, 'Make your move:');
       const botMove = getBotChoice(moves);
-      const winner = getWinner(userMove, botMove);
-      console.log(winner === 'user' ? 'You are the winner!' : 'Better luck next time!');
+      displayWinner(userMove, botMove);
 
       const playAgain = getUserChoice(['yes', 'no'], 'Play again?');
       if (playAgain === 'no') {
