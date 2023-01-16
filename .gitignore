@@ -1,6 +1,11 @@
-# Ignore all SQLite databases
+# Ignore
+
+## All SQLite databases
 db/*.sqlite3
-# Ignore local database
+## Ignore local database
 db/
-# Ignore ESlint files
+## ESlint files
 .eslintrc.cjs
+## Node Modules
+node_modules/
+.npm/
