@@ -7,5 +7,6 @@ db/
 ## ESlint files
 .eslintrc.cjs
 ## Node Modules
+package-lock.json
 node_modules/
 .npm/
