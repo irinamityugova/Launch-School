@@ -61,5 +61,15 @@ function isPalindrome(str) {
   return reverse === letters;
 }
 
-const output = isPalindrome('M6ada6$m'); // => true
+/**
+ * Palindromic Numbers
+ * Write a function that returns true if its integer argument is palindromic,
+ * or false otherwise. A palindromic number reads the same forwards and backwards.
+ */
+
+function isNumPalindrome(num) {
+  return isPalindrome(num.toString());
+}
+
+const output = isNumPalindrome('6667666'); // => true
 console.log(output);
