@@ -71,5 +71,34 @@ function isNumPalindrome(num) {
   return isPalindrome(num.toString());
 }
 
-const output = isNumPalindrome('6667666'); // => true
+/**
+ * Running Totals
+ * Write a function that takes an array of numbers and returns an array with the same number
+ * of elements, but with each element's value being the running total from the original array.
+ *
+ * Ex: totals([3, 4, 5]); // => [ 3, 7, 12 ]
+ * Ex: totals([]); // => []
+ *
+ * function totals(arr: Array) => Array
+ *
+ * Algorithm:
+ * Initiate an empty array called totals
+ * Initiate a sum variable equal to 0
+ * Loop the results
+ * - add the result to sum
+ * - add sum to the totals
+ * Return totals
+ */
+
+function totals(results) {
+  const totals = [];
+  let sum = 0;
+  for (let i = 0; i < results.length; i++) {
+    sum += results[i];
+    totals.push(sum);
+  }
+  return totals;
+}
+
+const output = totals([]); // => []
 console.log(output);
