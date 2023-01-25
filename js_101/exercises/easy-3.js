@@ -239,5 +239,42 @@ function cleanUpWords(str) {
   return str.split(/[\-+=!@#$%^&*(){}[\]":';<>,.?/`~\s]+/).join(' ').trim();
 }
 
-const output = cleanUpWords('---what\'s my +*& line?');
+/**
+ * What Century is That?
+ * Write a function that takes a year as input and returns the century.
+ * The return value should be a string that begins with the century number,
+ * and ends with 'st', 'nd', 'rd', or 'th' as appropriate for that number.
+ *
+ * New centuries begin in years that end with 01. So, the years
+ * 1901 - 2000 comprise the 20th century.
+ *
+ * function getCentury(year: Number) => century: Number
+ *
+ * Algorithm:
+ * Divide the year by 100
+ * Ceil the result
+ * If result is under 10,
+ * - result = '0' + result
+ * Parse result into a string
+ * Launch switch cases of result ends with,
+ * - '1', result += 'st'
+ * - '2', result += 'nd'
+ * - '3', result += 'rd'
+ * - default, 'th'
+ * Return `Aha! ${year} is ${result} century.`
+ */
+
+function getCentury(year) {
+  let result = Math.ceil(year / 100);
+  if (result < 10) result += '0';
+  switch (result[result.length - 1]) {
+    case '1': result += 'st';
+    case '2': result += 'nd';
+    case '3': result += 'rd';
+    default: result += 'th';
+  }
+  return `Aha! ${year} is ${result} century.`;
+}
+
+const output = getCentury(1);
 console.log(output);
