@@ -266,7 +266,7 @@ function cleanUpWords(str) {
 
 function getCentury(year) {
   let result = Math.ceil(year / 100);
-  if (result < 10) result = '0' + result;
+  if (result < 10) result += '0';
   switch (result[result.length - 1]) {
     case '1': result += 'st';
     case '2': result += 'nd';
