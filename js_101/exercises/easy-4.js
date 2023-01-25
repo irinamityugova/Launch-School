@@ -177,5 +177,37 @@ function swap(str) {
   return result.join(' ');
 }
 
-const output = swap('Oh what a wonderful day t is');  // "hO thaw a londerfuw yad ti si"
+/**
+ * Convert a String to a Number
+ * Convert without using JS built in methods
+ *
+ * Ex: console.log(stringToInteger("4321") === 4321); // logs true
+ * Ex: console.log(stringToInteger("570") === 570);   // logs true
+ *
+ * function stringToInteger(str: String) => Number
+ *
+ * Algorithm:
+ * Create a d object for string to number conversion
+ * Initiate a sum equal to 0
+ * Initiate an place equal to 0
+ * Loop through the string from the end (ones) to the beginning,
+ * - Convert the current digit to a number using the dictionary, save it as a digit
+ * - Add a digit to the sum, multiplying it by base 10 to the place exponent
+ * - Increment the place
+ * Return the sum
+ */
+
+function stringToInteger(str) {
+  const d = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, };
+  let sum = 0;
+  let place = 0;
+  for (let i = str.length - 1; i >= 0; i--) {
+    let digit = d[str[i]];
+    sum += digit * (10 ** place);
+    place++;
+  }
+  return sum;
+}
+
+const output = stringToInteger("5070");  // 5070
 console.log(output);
