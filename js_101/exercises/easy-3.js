@@ -162,5 +162,37 @@ The ${words.adj} ${words.noun} ${words.verb}s ${words.adv} over the lazy ${words
 The ${words.noun} quickly ${words.verb}s up Joe's ${words.adj} turtle`);
 }
 
-const output = madlibs();
+/**
+ * Double Doubles
+ * A double number is an even-length number whose left-side digits are exactly
+ * the same as its right-side digits. For example, 44, 3333, 103103, and 7676
+ * are all double numbers, whereas 444, 334433, and 107 are not.
+ *
+ * Write a function that returns the number provided as an argument multiplied
+ * by two, unless the argument is a double number; otherwise, return the double
+ * number as-is.
+ *
+ * function doubleDouble(num: Number) => Number
+ *
+ * Algorithm:
+ * If the number length is even and the number is a double
+ *   return number
+ * Else,
+ *   return number * 2
+ */
+
+function doubleDouble(num) {
+  function isDouble(str) {
+    const middle = str.length / 2;
+    return str.substring(0, middle) === str.substring(middle);
+  }
+
+  if (num.toString().length % 2 === 0 && isDouble(num.toString())) {
+    return num;
+  }
+
+  return num * 2;
+}
+
+const output = doubleDouble(232);
 console.log(output);
