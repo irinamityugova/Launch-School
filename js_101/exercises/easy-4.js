@@ -140,5 +140,42 @@ function wordSizes(str) {
   return count;
 }
 
-const output = wordSizes('Hey diddle diddle, the cat and the fiddle!');  // { "3": 5, "6": 3 }
+/**
+ * Letter Swap
+ * Given a string of words separated by spaces, write a function that swaps
+ * the first and last letters of every word.
+ *
+ * Ex: swap('Oh what a wonderful day it is');  // "hO thaw a londerfuw yad ti si"
+ * Ex: swap('Abcde');                          // "ebcdA"
+ *
+ * function swapLetters(str: String) => String
+ *
+ * Algorithm:
+ * Initiate a new empty array called result
+ * Set worde to the split of the str by spaces
+ * Loop through words
+ * - set first equal to first letter
+ * - set last equal to the last letter
+ * - if word's length > 2,
+ *   set swap equal to first + word.substring(2, length - 1) + last
+ * - push swap to the array
+ * Join the result by spaces
+ * Return result
+ */
+
+function swap(str) {
+  const result = [];
+  const words = str.split(/\s/)
+
+  for (let i = 0; i < words.length; i++) {
+    const first = words[i][0];
+    let last = '';
+    if (words[i].length > 1) last = words[i].slice(words[i].length - 1);
+    const swap = last + words[i].slice(1, words[i].length - 1) + first;
+    result.push(swap);
+  }
+  return result.join(' ');
+}
+
+const output = swap('Oh what a wonderful day t is');  // "hO thaw a londerfuw yad ti si"
 console.log(output);
