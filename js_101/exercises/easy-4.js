@@ -27,31 +27,39 @@ function search() {
 }
 
 /**
- * Palindromic Strings (Part 1)
+ * Palindromic Strings (Part 2)
  * Write a function that returns true if the string passed as an argument is a palindrome,
  * or false otherwise. A palindrome reads the same forwards and backwards.
- * For this problem, the case matters and all characters matter.
  *
- * Ex: isPalindrome('madam');               // true
+ * This time, however, your function should be case-insensitive, and should
+ * ignore all non-alphanumeric characters.
+ *
+ * Ex: isPalindrome('Madam, I\'m Adam');               // true
  * Ex: isPalindrome('Madam');               // false (case matters)
  *
  * function isPalindrome(str: String) => Boolean
  *
  * Algorithm:
  * Create an empty string called reverse
- * Loop through letters from last index to first
+ * Set the result of clean up method chain to letters:
+ * - Set the string to lower case
+ * - Split into letters
+ * - Filter for alphanumeric characters
+ * - Join into a string
+ * Loop through letters from last index to first:
  * - add current letter to the reverse string
  * After the loop,
- * Return the comparison of input string to the reverse string
+ * Return the comparison of letters to the reverse string
  */
 
 function isPalindrome(str) {
   let reverse = '';
-  for (let i = str.length - 1; i >= 0; i--) {
-    reverse += str[i];
+  const letters = str.toLowerCase().replace(/[.a-z0-9]/g, '');
+  for (let i = letters.length - 1; i >= 0; i--) {
+    reverse += letters[i];
   }
-  return reverse === str;
+  return reverse === letters;
 }
 
-const output = isPalindrome('Madam');
+const output = isPalindrome('M6ada6$m'); // => true
 console.log(output);
