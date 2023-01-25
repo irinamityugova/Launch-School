@@ -194,5 +194,29 @@ function doubleDouble(num) {
   return num * 2;
 }
 
-const output = doubleDouble(232);
+/**
+ * Grade Book
+ * Write a function that determines the mean (average) of the three scores
+ * passed to it, and returns the letter associated with that grade.
+ *
+ * function getMean(s1: Number, s2: Number, s3: Number) => String
+ *
+ * Algorithm:
+ * Add all grades from the parameters and divide them by 3 (number of grades)
+ * Set the result to mean variable
+ * Launch if statements that determine the letter grade
+ * - return the latter
+ *
+ * getMean(100, 0, 100); // => 'D';
+ */
+
+function getMean(s1, s2, s3) {
+  const mean = (s1 + s2 + s3) / 3;
+  return (mean >= 90)? 'A' :
+  (mean >= 80 && mean <= 90) ? 'B' :
+  (mean >= 70 && mean <= 80) ? 'C' :
+  (mean >= 60 && mean <= 70) ? 'D' : 'F';
+}
+
+const output = getMean(100, 0, 100);
 console.log(output);
