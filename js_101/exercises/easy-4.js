@@ -109,11 +109,20 @@ function totals(results) {
  * Ex: wordSizes('Four score and seven.'); // { "3": 1, "4": 1, "5": 1, "6": 1 }
  * Ex: wordSizes("What's up doc?"); // { "2": 1, "4": 1, "6": 1 }
  *
+ * Letter Counter (Part 2)
+ * Modify the wordSizes function from the previous exercise to exclude
+ * non-letters when determining word size. For instance, the word size of "it's" is 3, not 4
+ *
+ * Ex: wordSizes("What's up doc?"); // { "2": 1, "3": 1, "5": 1 }
+ * Ex: wordSizes('Hey diddle diddle, the cat and the fiddle!');  // { "3": 5, "6": 3 }
+ *
  * function wordSizes(str: String) // => Object
  *
  * Algorithm:
  * Create an empty object called count
- * Set a new array called words and set it to the split of words by spaces
+ * Set a new array called words and set it to the following chain to the input string
+ * - replace special characters with an empty string
+ * - split words by spaces
  * Loop through words
  * - if word length's key in count is undefined,
  *   set the key equal to 0
@@ -123,7 +132,7 @@ function totals(results) {
 
 function wordSizes(str) {
   const count = {};
-  const words = str.split(/\s/g);
+  const words = str.replace(/[^a-z0-9\s]/ig, '').split(/\s/g);
   for (let i = 0; i < words.length; i++) {
     if (count[words[i].length] === undefined) count[words[i].length] = 0;
     count[words[i].length]++;
@@ -131,5 +140,5 @@ function wordSizes(str) {
   return count;
 }
 
-const output = wordSizes('Four score and seven.'); // { "3": 1, "4": 1, "5": 1, "6": 1 }
+const output = wordSizes('Hey diddle diddle, the cat and the fiddle!');  // { "3": 5, "6": 3 }
 console.log(output);
