@@ -209,5 +209,29 @@ function stringToInteger(str) {
   return sum;
 }
 
-const output = stringToInteger("5070");  // 5070
+/**
+ * Convert a String to a Signed Number
+ *
+ * Ex: stringToSignedInteger("4321") === 4321; // => true
+ * Ex: stringToSignedInteger("-570") === -570; // => true
+ *
+ * function stringToSignedInteger(str: String) => Number
+ *
+ * Algorithm:
+ * Run a case check
+ * If a string starts with '-',
+ * - return the result of integer conversion multiplied by -1
+ * Else,
+ * - return the result of a regular conversion
+ *
+ */
+
+function stringToSignedInteger(str) {
+  if (str[0] === '-') {
+    return -1 * stringToInteger(str.slice(1));
+  }
+  return stringToInteger(str);
+}
+
+const output = stringToSignedInteger("-5070");  // -5070
 console.log(output);
