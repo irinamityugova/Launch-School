@@ -120,6 +120,47 @@ function makeRightTriangle(n) {
   return result.join('\n')
 }
 
+/**
+ * Madlibs
+ * Create a simple madlib program that prompts for a noun, a verb, an adverb,
+ * and an adjective, and injects them into a story that you create.
+ *
+ * Ex:
+ * Enter a noun: dog
+ * Enter a verb: walk
+ * Enter an adjective: blue
+ * Enter an adverb: quickly
+ *
+ * // console output
+ * Do you walk your blue dog quickly? That's hilarious!
+ * The blue dog walks quickly over the lazy dog.
+ * The dog quickly walks up blue Joe's turtle.
+ *
+ * finction madlibs() => String
+ *
+ * Algorithm:
+ * Initiate an empty object called words
+ * Get user input
+ * - Enter a noun:
+ * - Enter a verb:
+ * - Enter an adjective:
+ * - Enter an adverb:
+ * Save the inputs in words object
+ * Log the output story with words to the console
+ */
+import rlSync from 'readline-sync';
 
-const output = makeRightTriangle(4);
+function madlibs() {
+  const words = {};
+  words.noun = rlSync.question('Enter a noun: ');
+  words.verb = rlSync.question('Enter a verb: ');
+  words.adj = rlSync.question('Enter a adjective: ');
+  words.adv = rlSync.question('Enter a adverb: ');
+
+  console.log(`Did you ${words.verb} your ${words.adj} ${words.noun} quickly? That's hilarious!
+The ${words.adj} ${words.noun} ${words.verb}s ${words.adv} over the lazy ${words.noun}.
+The ${words.noun} quickly ${words.verb}s up Joe's ${words.adj} turtle`);
+}
+
+const output = madlibs();
 console.log(output);
