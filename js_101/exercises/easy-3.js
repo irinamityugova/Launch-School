@@ -80,5 +80,46 @@ function fibonacciLocation() {
   }
 }
 
-const output = fibonacciLocation(4);
-console.log(output.toString());
+/**
+ * Right Triangles
+ * Write a function that takes a positive integer, n, as an argument and logs
+ * a right triangle made of stars (*) whose sides each have n stars.
+ * The hypotenuse of the triangle (the diagonal side in the images below) should
+ * have one end at the lower-left of the triangle, and the other end at the upper-right.
+ *
+ * Ex:
+ * triangle(5);
+ *       *
+ *      **
+ *     ***
+ *    ****
+ *   *****
+ *
+ * function makeRightTriangle(n: Number) => String
+ *
+ * Algorithm:
+ * Initiate a result array
+ *
+ * Loop from n to 1
+ * - create spaces variable and store n - i number of spaces
+ * - create stars variable and store n number of spaces
+ * - add spaces to n number of stars
+ * - unshift the result of the above to the result
+ * Return result joined by newline characters
+ */
+
+function makeRightTriangle(n) {
+  const result = [];
+
+  for (let i = n; i > 0; i--) {
+    const spaces = ' '.repeat(n - i);
+    const stars = '*'.repeat(i);
+    result.unshift(spaces + stars)
+  }
+
+  return result.join('\n')
+}
+
+
+const output = makeRightTriangle(4);
+console.log(output);
