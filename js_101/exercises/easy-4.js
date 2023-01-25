@@ -100,5 +100,36 @@ function totals(results) {
   return totals;
 }
 
-const output = totals([]); // => []
+/**
+ * Letter Counter (Part 1)
+ * Write a function that takes a string consisting of zero or more space separated
+ * words and returns an object that shows the number of words of different sizes.
+ * Words consist of any sequence of non-space characters.
+ *
+ * Ex: wordSizes('Four score and seven.'); // { "3": 1, "4": 1, "5": 1, "6": 1 }
+ * Ex: wordSizes("What's up doc?"); // { "2": 1, "4": 1, "6": 1 }
+ *
+ * function wordSizes(str: String) // => Object
+ *
+ * Algorithm:
+ * Create an empty object called count
+ * Set a new array called words and set it to the split of words by spaces
+ * Loop through words
+ * - if word length's key in count is undefined,
+ *   set the key equal to 0
+ * - Increment the count of the count[length] by 1
+ * Return the count object
+ */
+
+function wordSizes(str) {
+  const count = {};
+  const words = str.split(/\s/g);
+  for (let i = 0; i < words.length; i++) {
+    if (count[words[i].length] === undefined) count[words[i].length] = 0;
+    count[words[i].length]++;
+  }
+  return count;
+}
+
+const output = wordSizes('Four score and seven.'); // { "3": 1, "4": 1, "5": 1, "6": 1 }
 console.log(output);
