@@ -239,6 +239,7 @@ function cleanUpWords(str) {
   return str.split(/[\-+=!@#$%^&*(){}[\]":';<>,.?/`~\s]+/).join(' ').trim();
 }
 
+<<<<<<< HEAD
 /**
  * What Century is That?
  * Write a function that takes a year as input and returns the century.
@@ -277,4 +278,7 @@ function getCentury(year) {
 }
 
 const output = getCentury(1);
+=======
+const output = cleanUpWords('---what\'s my +*& line?');
+>>>>>>> parent of bb2d53d (Exercise: Easy 3 - What Century is That?)
 console.log(output);
