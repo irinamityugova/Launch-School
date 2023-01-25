@@ -218,5 +218,26 @@ function getMean(s1, s2, s3) {
   (mean >= 60 && mean <= 70) ? 'D' : 'F';
 }
 
-const output = getMean(100, 0, 100);
+/**
+ * Clean up the words
+ * Given a string that consists of some words and an assortment of non-alphabetic
+ * characters, write a function that returns that string with all of the
+ * non-alphabetic characters replaced by spaces. If one or more non-alphabetic
+ * characters occur in a row, you should only have one space in the result
+ * (i.e., the result string should never have consecutive spaces).
+ *
+ * Ex: cleanUp("---what's my +*& line?");    // " what s my line "
+ *
+ * Algorithm:
+ * Create a regex for all special characters and spaces
+ * Split the string by regex
+ * Join the array by spaces
+ * Trim any excess
+ */
+
+function cleanUpWords(str) {
+  return str.split(/[\-+=!@#$%^&*(){}[\]":';<>,.?/`~\s]+/).join(' ').trim();
+}
+
+const output = cleanUpWords('---what\'s my +*& line?');
 console.log(output);
