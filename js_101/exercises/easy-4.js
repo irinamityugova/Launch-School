@@ -233,5 +233,44 @@ function stringToSignedInteger(str) {
   return stringToInteger(str);
 }
 
-const output = stringToSignedInteger("-5070");  // -5070
+/**
+ * Convert a Number to a String
+ * Don't use js built in methods or implicit conversion
+ *
+ * Ex: integerToString(4321);        // "4321"
+ * Ex: integerToString(-0);           // "0"
+ *
+ * function integerToString(input: Number) => String
+ *
+ * Algorithm:
+ * Set up a DIGITS dictionary
+ * Initiate the result with an empty string
+ * While numis greater than 0,
+ * - set rem as a remainder of division by 10
+ * - divide num by 10 and round it down
+ * - set the result equal to the remainder according to DIGITS + result
+ * If we had a negative number, add '-' in front of result
+ * Return result
+ *
+ */
+
+function integerToString(num) {
+  const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  let result = '';
+  let negative = num !== 0 && -num === Math.abs(num);
+
+  do {
+    let rem = num % 10;
+    num = Math.floor(num / 10);
+
+    result = DIGITS[rem] + result;
+  } while (num > 0);
+  if (negative) {
+    result = '-'.concat(result);
+  }
+
+  return result;
+}
+
+const output = integerToString(-0);  // '0'
 console.log(output);
