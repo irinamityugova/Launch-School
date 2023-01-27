@@ -225,5 +225,22 @@ function multiplyList(first, second) {
   return result;
 }
 
-const output = multiplyList([3, 5, 7], [9, 10, 11]);    // [27, 50, 77]
+/**
+ * List of Digits
+ * Write a function that takes one argument, a positive integer, and returns a
+ * list of the digits in the number.
+ *
+ * Ex: digitList(12345);       // [1, 2, 3, 4, 5]
+ * Ex: digitList(7);           // [7]
+ *
+ * function digitList(int: Number) => Array [...Number]
+ *
+ * Algorithm:
+ * Parse the number to a string
+ * Return the split of that the string
+ */
+
+const digitList = (int) => String(int).split('');
+
+const output = digitList(12345);       // [1, 2, 3, 4, 5]
 console.log(output);
