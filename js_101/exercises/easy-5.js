@@ -39,5 +39,33 @@ function dms(float) {
   return `${deg}${degCode}${mins}'${sec}"`;
 }
 
-const output = dms(76.73);
+/**
+ * Combining Arrays
+ * Write a function that takes two arrays as arguments and returns an array
+ * containing the union of the values from the two. There should be no duplication
+ * of values in the returned array, even if there are duplicates in the original
+ * arrays. You may assume that both arguments will always be arrays.
+ *
+ * Ex: union([1, 3, 5], [3, 6, 9]);    // [1, 3, 5, 6, 9]
+ *
+ * function union(a: Array, b: Array) => Array
+ *
+ * Algorithm:
+ * Copy the first array. Shallow copy's okay.
+ * Loop through the second array,
+ * - If copy includes the number, continue the array
+ * - Else, push the number to the copy
+ * Return the copy
+ */
+
+function union(a, b) {
+  const copy = a.slice();
+  for (let num of b) {
+    if (copy.includes(num)) continue;
+    copy.push(num);
+  }
+  return copy;
+}
+
+const output = union([1, 3, 5], [3, 6, 9]);
 console.log(output);
