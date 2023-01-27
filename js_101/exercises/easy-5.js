@@ -136,14 +136,33 @@ function findDup(numbers) {
   return 'No duplicates';
 }
 
-const output = findDup([18,  9, 36, 96, 31, 19, 54, 75, 42, 15,
-  38, 25, 97, 92, 46, 69, 91, 59, 53, 27,
-  14, 61, 90, 81,  8, 63, 95, 99, 30, 65,
-  78, 76, 48, 16, 93, 77, 52, 49, 37, 29,
-  89, 10, 84,  1, 47, 68, 12, 33, 86, 60,
-  41, 44, 83, 35, 94, 73, 98,  3, 64, 82,
-  55, 79, 80, 21, 39, 72, 13, 50,  6, 70,
-  85, 87, 51, 17, 66, 20, 28, 26,  2, 22,
-  40, 23, 71, 62, 73, 32, 43, 24,  4, 56,
-   7, 34, 57, 74, 45, 11, 88, 67,  5, 58]);    // 73
+/**
+ * Combine Two Lists
+ * Write a function that combines two arrays passed as arguments, and returns a
+ * new array that contains all elements from both array arguments, with each
+ * element taken in alternation.
+ *
+ * You may assume that both input arrays are non-empty, and that they have the
+ * same number of elements.
+ *
+ * Ex: interleave([1, 2, 3], ['a', 'b', 'c']);    // [1, "a", 2, "b", 3, "c"]
+ *
+ * function interleave(first: Array, second: Array) => Array
+ *
+ * Algorithm:
+ * Create an empty result array
+ * Loop through the first array by i index
+ * - push items at the current index of the loop to the result array
+ * Return result
+ */
+
+function interleave(first, second) {
+  const result = [];
+  for (let i = 0; i < first.length; i++) {
+    result.push(first[i], second[i]);
+  }
+  return result;
+}
+
+const output = interleave([1, 2, 3], ['a', 'b', 'c']);    // [1, "a", 2, "b", 3, "c"]
 console.log(output);
