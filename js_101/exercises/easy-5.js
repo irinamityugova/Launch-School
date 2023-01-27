@@ -41,6 +41,7 @@ function dms(float) {
 
 /**
  * Combining Arrays
+ *
  * Write a function that takes two arrays as arguments and returns an array
  * containing the union of the values from the two. There should be no duplication
  * of values in the returned array, even if there are duplicates in the original
