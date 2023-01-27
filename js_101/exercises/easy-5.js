@@ -283,8 +283,49 @@ function countOccurrences(arr) {
   return null;
 }
 
-let vehicles = ['car', 'car', 'truck', 'car', 'SUV', 'truck',
-                'motorcycle', 'motorcycle', 'car', 'truck'];
+/**
+ * Array Average
+ * Write a function that takes one argument, an array of integers, and returns
+ * the average of all the integers in the array, rounded down to the integer
+ * component of the average. The array will never be empty, and the numbers will
+ * always be positive integers.
+ *
+ * Ex: average([1, 5, 87, 45, 8, 8]);       // 25
+ * Ex: average([9, 47, 23, 95, 16, 52]);    // 40
+ *
+ * function average(numbers: Array [...Number]) => Number
+ *
+ * Algorithm:
+ * Set result to 0;
+ * Loop through numbers
+ * - Add number to the result
+ * Divide the result by length of numbers
+ * Round down, or floor, the result to an integer
+ * Return result
+ */
 
-const output = countOccurrences(vehicles);
-// console.log(output);
+function average(numbers) {
+  let result = 0;
+  for (let num of numbers) {
+    result += num;
+  }
+  result /= numbers.length;
+  return Math.floor(result);
+}
+
+let output = average([1, 5, 87, 45, 8, 8]);       // 25
+console.log(output);
+
+/**
+ * Or...
+ * Algorithm:
+ * Reduce numbers with addition
+ * Divide it by numbers length
+ * Round it down
+ * Return
+ */
+
+const averageReduce = (numbers) => Math.floor(numbers.reduce((acc, num) => acc + num) / numbers.length);
+
+output = averageReduce([1, 5, 87, 45, 8, 8]);       // 25
+console.log(output);
