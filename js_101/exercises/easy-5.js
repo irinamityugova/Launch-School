@@ -242,5 +242,49 @@ function multiplyList(first, second) {
 
 const digitList = (int) => String(int).split('');
 
-const output = digitList(12345);       // [1, 2, 3, 4, 5]
-console.log(output);
+/**
+ * How Many?
+ * Write a function that counts the number of occurrences of each element in a
+ * given array. Once counted, log each element alongside the number of occurrences.
+ * Consider the words case sensitive e.g. ("suv" !== "SUV").
+ *
+ * Ex: let vehicles = ['car', 'car', 'truck', 'car', 'SUV', 'truck',
+ *                     'motorcycle', 'motorcycle', 'car', 'truck'];
+ *
+ * countOccurrences(vehicles);
+ * // console output -- your output sequence may be different
+ * car => 4
+ * truck => 3
+ * SUV => 1
+ * motorcycle => 2
+ *
+ * function countOccurrences(arr: Array) => null (logs to the console)
+ *
+ * Algorithm:
+ * Set count to an empty object
+ * Loop through the input array by items
+ * - If the item does not exist in our count,
+ *   create an instance at 0
+ * - Increment the item at the count
+ * Loop through keys in count
+ * - Log key => value to the console
+ * Return null
+ */
+
+function countOccurrences(arr) {
+  const count = {};
+  arr.map((item) => {
+    if (count[item] === undefined) count[item] = 0;
+    count[item]++;
+  });
+  for (let key in count) {
+    console.log(`${key} => ${count[key]}`);
+  }
+  return null;
+}
+
+let vehicles = ['car', 'car', 'truck', 'car', 'SUV', 'truck',
+                'motorcycle', 'motorcycle', 'car', 'truck'];
+
+const output = countOccurrences(vehicles);
+// console.log(output);
