@@ -164,5 +164,37 @@ function interleave(first, second) {
   return result;
 }
 
-const output = interleave([1, 2, 3], ['a', 'b', 'c']);    // [1, "a", 2, "b", 3, "c"]
+/**
+ * Multiplicative Average
+ * Write a function that takes an array of integers as input, multiplies all of
+ * the integers together, divides the result by the number of entries in the array,
+ * and returns the result as a string with the value rounded to three decimal places.
+ *
+ * Ex: multiplicativeAverage([3, 5]);                   // "7.500"
+ * Ex: multiplicativeAverage([2, 5, 7, 11, 13, 17]);    // "28361.667"
+ *
+ * function multiplicativeAverage(numbers: Array [...Number]) => String
+ *
+ * Algorithm:
+ * Set the result equal to 1
+ * Loop through the array of numbers
+ * - Multiply the result by each number
+ * Divide the result by length of numbers array
+ * Round the result to three decimal places
+ * Return the result as a string
+ *
+ */
+
+function multiplicativeAverage(numbers) {
+  let result = 1;
+
+  for (let num of numbers) {
+    result *= num;
+  }
+  result /= numbers.length;
+
+  return String(result.toFixed(3));
+}
+
+const output = multiplicativeAverage([3, 5]);                   // "7.500"
 console.log(output);
