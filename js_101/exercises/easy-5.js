@@ -196,5 +196,34 @@ function multiplicativeAverage(numbers) {
   return String(result.toFixed(3));
 }
 
-const output = multiplicativeAverage([3, 5]);                   // "7.500"
+/**
+ * Multiply Lists
+ * Write a function that takes two array arguments, each containing a list of
+ * numbers, and returns a new array that contains the product of each pair of
+ * numbers from the arguments that have the same index. You may assume that the
+ * arguments contain the same number of elements.
+ *
+ * Ex: multiplyList([3, 5, 7], [9, 10, 11]);    // [27, 50, 77]
+ *
+ * function multiplyList(
+ *  first: Array [...Numbers],
+ *  second: Array [...Numbers]); => Array [...Numbers]
+ *
+ * Algorithm:
+ * Set the result to an empty array
+ * Loop through i index of the first array
+ * - Multiply items of both arrays aat that index
+ * - Push the result to the result
+ * Return result
+ */
+
+function multiplyList(first, second) {
+  let result = [];
+  for (let i = 0; i < first.length; i++) {
+    result.push(first[i] * second[i])
+  }
+  return result;
+}
+
+const output = multiplyList([3, 5, 7], [9, 10, 11]);    // [27, 50, 77]
 console.log(output);
