@@ -47,5 +47,38 @@ const doubleConsonants = (str) => str.split('').map((char) => {
   return char;
   }).join('');
 
-const output = doubleConsonants('String');          // "SSttrrinngg"
+/**
+ * Reverse Number
+ * Write a function that takes a positive integer as an argument and
+ * returns that number with its digits reversed.
+ *
+ * Ex:
+ * reverseNumber(12345);    // 54321
+ * reverseNumber(12213);    // 31221
+ * reverseNumber(456);      // 654
+ * reverseNumber(12000);    // 21 -- Note that leading zeros in the result get dropped!
+ * reverseNumber(1);        // 1
+ *
+ * function reverseNumber(num: Number) => Number
+ *
+ * Algorithm:
+ * Init an empty array
+ * Parse to string
+ * For the length of the string
+ * - Unshift digit to array
+ * Join the array
+ */
+
+function reverseNumber(num) {
+  const arr = [];
+  const str = String(num);
+
+  for (let i = 0; i < str.length; i++) {
+    arr.unshift(str[i]);
+  }
+
+  return arr.join('');
+}
+
+const output = reverseNumber(12345);    // 54321
 console.log(output);
