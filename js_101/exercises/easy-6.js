@@ -77,7 +77,7 @@ function reverseNumber(num) {
     arr.unshift(str[i]);
   }
 
-  return arr.join('');
+  return Number(arr.join(''));
 }
 
 const output = reverseNumber(12345);    // 54321
