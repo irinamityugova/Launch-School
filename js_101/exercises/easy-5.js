@@ -313,8 +313,8 @@ function average(numbers) {
   return Math.floor(result);
 }
 
-let output = average([1, 5, 87, 45, 8, 8]);       // 25
-console.log(output);
+// let output = average([1, 5, 87, 45, 8, 8]);       // 25
+// console.log(output);
 
 /**
  * Or...
@@ -327,5 +327,85 @@ console.log(output);
 
 const averageReduce = (numbers) => Math.floor(numbers.reduce((acc, num) => acc + num) / numbers.length);
 
-output = averageReduce([1, 5, 87, 45, 8, 8]);       // 25
+// output = averageReduce([1, 5, 87, 45, 8, 8]);       // 25
+// console.log(output);
+
+/**
+ * After Midnight (Part 1)
+ *
+ * The time of day can be represented as the number of minutes before or after
+ * midnight. If the number of minutes is positive, the time is after midnight.
+ * If the number of minutes is negative, the time is before midnight.
+ *
+ * Write a function that takes a time using this minute-based format and returns
+ * the time of day in 24 hour format (hh:mm). Your function should work with
+ * any integer input.
+ *
+ * You may not use javascript's Date class methods.
+ * Disregard Daylight Savings and Standard Time and other complications.
+ *
+ * Ex: console.log(timeOfDay(0) === "00:00");
+ * Ex: console.log(timeOfDay(-3) === "23:57");
+ * Ex: console.log(timeOfDay(35) === "00:35");
+ * Ex: console.log(timeOfDay(-1437) === "00:03");
+ * Ex: console.log(timeOfDay(3000) === "02:00");
+ *
+ * function timeOfDay(offset: Number) => String
+ *
+ * Algorithm:
+ * Set MIN_TO_HR = 60;
+ * Set HRS_TO_DAY = 24;
+ * Declare mins, hrs and rem.
+ *
+ * Get the mins
+ * - rem = offset % 60
+ * - Convert remainder to time:
+ *   If rem < 0,
+ *   - mins is an additional hour added to negative remainder
+ *   Else,
+ *   - mins is the remainder
+ *
+ * Get hrs
+ * - rem = (offset / MINS_TO_HR) % HRS_TO_DAY
+ * - Convert remainder to time:
+ *   If rem < 0,
+ *   - hrs is an additional day added to negative remainder
+ *   Else,
+ *   - hrs is the remainder
+ * - Floor the decimal to integer
+ *
+ * If hrs or mins < 10, add '0' in the front
+ * Connect the two into a string and return
+ */
+
+function timeOfDay(offset) {
+  const MINS_TO_HR = 60;
+  const HRS_TO_DAY = 24;
+  let mins;
+  let hrs;
+  let rem;
+
+  const remToTime = (conversion, remainder) => remainder < 0 ? conversion + remainder : remainder;
+
+  rem = offset % MINS_TO_HR;
+  mins = remToTime(MINS_TO_HR, rem);
+
+  rem = (offset / MINS_TO_HR) % HRS_TO_DAY;
+  hrs = Math.floor(remToTime(HRS_TO_DAY, rem));
+
+  if (mins < 10) mins = `0${mins}`;
+  if (hrs < 10) hrs = `0${hrs}`;
+
+  return `${String(hrs)}:${String(mins)}`;
+}
+
+let output = timeOfDay(0);
 console.log(output);
+
+console.log(timeOfDay(0) === "00:00");
+console.log(timeOfDay(-3) === "23:57");
+console.log(timeOfDay(35) === "00:35");
+console.log(timeOfDay(-1437) === "00:03");
+console.log(timeOfDay(3000) === "02:00");
+console.log(timeOfDay(800) === "13:20");
+console.log(timeOfDay(-4231) === "01:29");
