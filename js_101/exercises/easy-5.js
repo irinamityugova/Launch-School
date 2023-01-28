@@ -399,13 +399,59 @@ function timeOfDay(offset) {
   return `${String(hrs)}:${String(mins)}`;
 }
 
-let output = timeOfDay(0);
+/**
+ * After Midnight (Part 2)
+ * As seen in the previous exercise, the time of day can be represented as the
+ * number of minutes before or after midnight. If the number of minutes is positive,
+ * the time is after midnight. If the number of minutes is negative,
+ * the time is before midnight.
+ *
+ * Write two functions that each take a time of day in 24 hour format, and
+ * return the number of minutes before and after midnight, respectively. Both
+ * functions should return a value in the range 0..1439.
+ *
+ * You may not use javascript's Date class methods.
+ *
+ * Ex:
+ * afterMidnight("00:00") === 0
+ * afterMidnight("12:34") === 754
+ *
+ * function afterMidnight(str: String) => Number
+ *
+ * Algorithm:
+ * HR_TO_MINS = 60;
+ * Set time to split of the time by colon, convert each to Number
+ * Set edge case if (hrs % 24 && mins % 60 === 0) return 0
+ * Set mins to hrs conversion plus minutes
+ * Return mins
+ */
+
+function afterMidnight(str) {
+  const HRS_TO_MINS = 60;
+  const time = str.split(':').map(e => Number(e));
+  const mins = time[0] * HRS_TO_MINS + time[1];
+  return mins;
+}
+
+let output = afterMidnight("12:34"); // 754
 console.log(output);
 
-console.log(timeOfDay(0) === "00:00");
-console.log(timeOfDay(-3) === "23:57");
-console.log(timeOfDay(35) === "00:35");
-console.log(timeOfDay(-1437) === "00:03");
-console.log(timeOfDay(3000) === "02:00");
-console.log(timeOfDay(800) === "13:20");
-console.log(timeOfDay(-4231) === "01:29");
+/**
+ * Ex:
+ * beforeMidnight("12:34") === 686
+ * beforeMidnight("24:00") === 0
+ *
+ * Algorithm:
+ * Set MINS_IN_DAY = 24 * 60
+ * Set mins to calling afterMidnight
+ * Return MINS_IN_DAY - mins
+ */
+
+function beforeMidnight(str) {
+  const MINS_IN_DAY = 24 * 60;
+  const mins = afterMidnight(str);
+  return MINS_IN_DAY - mins;
+}
+
+output = beforeMidnight("12:34"); // 686
+console.log(output);
