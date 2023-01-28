@@ -41,7 +41,7 @@ const repeater = (str) => str.split('').map(e => e + e).join('');
  * Return
  */
 const doubleConsonants = (str) => str.split('').map((char) => {
-  if (char.match(/[^aeiou]/i)) {
+  if (char.match(/[^aeiou\s-\/\\^$*+?.()|[\]{}\d]/i)) {
     return char.repeat(2)
   }
   return char;
