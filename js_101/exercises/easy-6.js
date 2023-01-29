@@ -159,5 +159,48 @@ function reverseWords(str) {
   })).join(' ');
 }
 
-const output = reverseWords('Walk around the block');    // "Walk dnuora the kcolb"
-console.log(output);
+/**
+ * Reversed Arrays
+ * Write a function that takes an Array as an argument and reverses its elements
+ * in place. That is, mutate the Array passed into this method. The return value
+ * should be the same Array object.
+ *
+ * You may not use Array.prototype.reverse().
+ *
+ * Ex:
+ * let list = [1, 2, 3, 4];
+ * let result = reverse(list);
+ * console.log(result); // logs [4,3,2,1]
+ * console.log(list === result); // logs true
+ *
+ * function reverse(list: Array) => Array
+ *
+ * Algorithm:
+ * Create a copy of the list
+ * Loop from the end to the front of the copy
+ * - Remove the first item of the list
+ * - Add the current item of copy
+ * Return the list
+ *
+ * Or:
+ * Use sort method where index of a is greater then index of b
+ */
+
+// function reverse(list) {
+//   const copy = list.slice();
+//   for (let i = copy.length - 1; i >= 0 ; i--) {
+//     list.shift();
+//     list.push(copy[i]);
+//   }
+//   return list;
+// }
+
+function reverse(arr) {
+  arr.sort((a, b) => arr.indexOf(b) - arr.indexOf(a));
+  return arr;
+}
+
+let list = [1, 2, 3, 4];
+let result = reverse(list);
+console.log(result); // logs [4,3,2,1]
+console.log(list === result); // logs true
