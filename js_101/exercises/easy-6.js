@@ -224,7 +224,42 @@ function reverse(arr) {
   return arr;
 }
 
-let list = [1, 2, 3, 4];
-let result = reverse(list);
-console.log(result); // logs [4,3,2,1]
-console.log(list === result); // logs true
+/**
+ * Matching Parentheses?
+ *
+ * Write a function that takes a string as an argument and returns true if all
+ * parentheses in the string are properly balanced, false otherwise. To be
+ * properly balanced, parentheses must occur in matching '(' and ')' pairs.
+ *
+ * function isBalanced(str: String) => Boolean
+ *
+ * Algorithm:
+ * split characters
+ * filter parantheses
+ * Loop i through the list,
+ * - when you find a consecutive "(", ")",
+ *   remove both,
+ *   restart the i at 0
+ * If you reached until the end and the array is empty, return true, else - false
+ */
+
+function isBalanced(str) {
+  let parantheses = str.split('').filter((e) => e.match(/[()]/));
+
+  for (let i = 1; i < parantheses.length; i++) {
+    if (parantheses[i - 1] === '(' && parantheses[i] === ')') {
+      parantheses.splice(i - 1, 2);
+      i = 0;
+    }
+  }
+  return parantheses.length === 0;
+}
+
+console.log(isBalanced("What (is) this?") === true);
+console.log(isBalanced("What is) this?") === false);
+console.log(isBalanced("What (is this?") === false);
+console.log(isBalanced("((What) (is this))?") === true);
+console.log(isBalanced("((What)) (is this))?") === false);
+console.log(isBalanced("Hey!") === true);
+console.log(isBalanced(")Hey!(") === false);
+console.log(isBalanced("What ((is))) up(") === false);
