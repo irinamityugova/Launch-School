@@ -181,9 +181,6 @@ function reverseWords(str) {
  * - Remove the first item of the list
  * - Add the current item of copy
  * Return the list
- *
- * Or:
- * Use sort method where index of a is greater then index of b
  */
 
 // function reverse(list) {
@@ -195,8 +192,35 @@ function reverseWords(str) {
 //   return list;
 // }
 
+/**
+ * Or:
+ * Use sort method where index of a is greater then index of b
+ */
+
+// function reverse(arr) {
+//   arr.sort((a, b) => arr.indexOf(b) - arr.indexOf(a));
+//   return arr;
+// }
+
+/**
+ * Or:
+ * Use a while loop to t
+ * - Exchange left and right items
+ * - Increment left
+ * - Decrement right
+ * - Terminate in the middle of the list
+ * Return
+ */
+
 function reverse(arr) {
-  arr.sort((a, b) => arr.indexOf(b) - arr.indexOf(a));
+  let left = 0;
+  let right = arr.length - 1;
+  while (left < arr.length / 2) {
+    [arr[left], arr[right]] =
+      [arr[right], arr[left]];
+    left++;
+    right--;
+  }
   return arr;
 }
 
