@@ -115,5 +115,49 @@ function sequence(count, start) {
   return result;
 }
 
-const output = sequence(5, 1);          // [1, 2, 3, 4, 5]
+/**
+ * Reverse It (Part 1)
+ * Write a function that takes a string argument and returns a new string
+ * containing the words from the string argument in reverse order.
+ *
+ * Ex: reverseSentence('');                       // ""
+ * Ex: reverseSentence('Hello World');            // "World Hello"
+ * Ex: reverseSentence('Reverse these words');    // "words these Reverse"
+ *
+ * function reverseSentence(str: String) => String
+ *
+ * Algorithm:
+ * Chain methods on the string: split, reverse, join!
+ */
+
+const reverseSentence = (str) => str.split(' ').reverse().join(' ')
+
+/**
+ * Reverse It (Part 2)
+ * Write a function that takes a string argument containing one or more words
+ * and returns a new string containing the words from the string argument.
+ * All five-or-more letter words should have their letters in reverse order.
+ * The string argument will consist of only letters and spaces. Words will be
+ * separated by a single space.
+ *
+ * Ex: reverseWords('Walk around the block');    // "Walk dnuora the kcolb"
+ *
+ * function reverseWords(str: String) => String
+ *
+ * Algorithm:
+ * Split by space
+ * For each word
+ * - If the word's length is over 4 characters
+ *   Split, Reverse, Join the word
+ * Join by spaces
+ */
+
+function reverseWords(str) {
+  return str.split(' ').map(((word) => {
+    if (word.length > 4) return word.split('').reverse('').join('');
+    return word;
+  })).join(' ');
+}
+
+const output = reverseWords('Walk around the block');    // "Walk dnuora the kcolb"
 console.log(output);
