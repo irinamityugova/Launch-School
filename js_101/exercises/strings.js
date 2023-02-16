@@ -129,7 +129,7 @@ function doWhileSolution(str) {
 
   do {
     end = end.replace(/e/g, '');
-  } while (end.includes('e'))
+  } while (end.includes('e'));
   return start + end;
 }
 
