@@ -72,7 +72,7 @@ function calculateLeftoverBlocks(inputBlocks) {
 
 
 /*
-Sort by Most Adjacent Consonants
+PEDAC Sort by Most Adjacent Consonants
 Given an array of strings, return a new array where the strings are sorted to the
 highest number of adjacent consonants a particular string contains. If two strings
 contain the same highest number of adjacent consonants they should retain their
