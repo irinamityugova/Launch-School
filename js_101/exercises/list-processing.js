@@ -1,6 +1,48 @@
 let output = 'Output was not assigned';
 
 /*
+Sum of Sums
+10:48-11:11 21 min
+Write a function that takes an array of numbers and returns the
+sum of the sums of each leading subsequence in that array.
+Examine the examples to see what we mean. You may assume that
+the array always contains at least one number.
+
+P
+sumOfSums(Array[...Numbers]) => Number
+leading subsequence starts with the first number every time
+[3, 5, 2] => (3) + (3 + 5) + (3 + 5 + 2) => 21
+
+D
+Array
+
+A
+Iterate leading subsequence
+  Sum the sequence
+Accumulate the sum of subsequences
+Return the sum
+
+C
+split to make subsequences
+reduce to iterate and get the sums
+
+*/
+
+function sumOfSums(arr) {
+  return arr.reduce((acc, _, i) => {
+    const sub = arr.slice(0, i + 1);
+    const subSum = sub.reduce((acc, curr) => acc + curr);
+    return acc + subSum;
+  }, 0);
+}
+
+//Examples:
+
+// output = sumOfSums([3, 5, 2]);        // (3) + (3 + 5) + (3 + 5 + 2) --> 21
+// output = sumOfSums([1, 5, 7, 3]);     // (1) + (1 + 5) + (1 + 5 + 7) + (1 + 5 + 7 + 3) --> 36
+// output =sumOfSums([4]);              // 4
+// output = sumOfSums([1, 2, 3, 4, 5]);  // 35
+
 /*
 Palindromic Substrings 10:15am-10:55 40 mins
 Write a function that returns a list of all palindromic substrings of a string. That is, each substring must consist of a sequence of characters that reads the same forward and backward. The substrings in the returned list should be sorted by their order of appearance in the input string. Duplicate substrings should be included multiple times.
@@ -77,7 +119,7 @@ function palindromes(str) {
 // Examples:
 
 // palindromes('abcd');       // []
-console.log(palindromes('madam'));      // [ "madam", "ada" ]
+// console.log(palindromes('madam'));      // [ "madam", "ada" ]
 
 // console.log(palindromes('hello-madam-did-madam-goodbye'));
 // returns
