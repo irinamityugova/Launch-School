@@ -1,5 +1,164 @@
 let output = 'Output was not assigned';
 
+/* JS101-JS119 - Small Problems List Processing */
+
+/* Inventory Item Availability 18 mins
+Building on the previous exercise, write a function that returns true or false based on whether or not an inventory item is available. As before, the function takes two arguments: an inventory item and a list of transactions. The function should return true only if the sum of the quantity values of the item's transactions is greater than zero. Notice that there is a movement property in each transaction object. A movement value of 'out' will decrease the item's quantity.
+
+You may (and should) use the transactionsFor function from the previous exercise.
+*/
+
+/* Irina */
+/*
+P
+function (item, transactions) => true/false
+
+item = id
+= Number
+
+transaction
+= Array [...Objects {id, movement, quantity} ]
+
+R
+inventory item is available if the sum of the quantity values of the item's transactions is greater than zero
+ A movement value of 'out' will decrease the item's quantity by quantity amount
+ ID exists
+
+A
+Select transactionsFor itemID
+Iterate through each transaction
+- If movement is "in", add the quantity to the sum,
+- Else subtract the quantity from the sum
+If the sum is above 0, return true. else, false
+
+C
+reduce to iterate and get the sum
+*/
+
+function isItemAvailable(item, transactions) {
+  const selection = transactionsFor(item, transactions);
+  const sum = selection.reduce((sum, transaction) => {
+    if (transaction["movement"] === "in") return sum + transaction.quantity;
+    return sum - transaction.quantity;
+  }, 0);
+  return sum > 0;
+}
+
+
+// Examples:
+let transactions = [ { id: 101, movement: 'in',  quantity:  5 },
+                     { id: 105, movement: 'in',  quantity: 10 },
+                     { id: 102, movement: 'out', quantity: 17 },
+                     { id: 101, movement: 'in',  quantity: 12 },
+                     { id: 103, movement: 'out', quantity: 20 },
+                     { id: 102, movement: 'out', quantity: 15 },
+                     { id: 105, movement: 'in',  quantity: 25 },
+                     { id: 101, movement: 'out', quantity: 18 },
+                     { id: 102, movement: 'in',  quantity: 22 },
+                     { id: 103, movement: 'out', quantity: 15 }, ];
+
+console.log(isItemAvailable(101, transactions));     // false
+console.log(isItemAvailable(103, transactions));     // false
+console.log(isItemAvailable(105, transactions));     // true
+
+/*
+Inventory Item Transactions 9 mins
+Write a function that takes two arguments, an inventory item ID and a list of transactions, and returns an array containing only the transactions for the specified inventory item.
+
+P
+function transactionsFor (Number, Array [...Objects]) (itemID, transactions) => Array [...Objects]
+
+Result is filtered to match the itemID
+
+A
+Select transactions that match the itemID
+Filter transactions
+Access the object's ID
+Compare to the given id
+*/
+
+function transactionsFor(itemID, transactions) {
+  return transactions.filter(transaction => transaction["id"] === itemID);
+}
+
+// // Example:1
+// let transactions = [ { id: 101, movement: 'in',  quantity:  5 },
+//                     { id: 105, movement: 'in',  quantity: 10 },
+//                     { id: 102, movement: 'out', quantity: 17 },
+//                     { id: 101, movement: 'in',  quantity: 12 },
+//                     { id: 103, movement: 'out', quantity: 20 },
+//                     { id: 102, movement: 'out', quantity: 15 },
+//                     { id: 105, movement: 'in',  quantity: 25 },
+//                     { id: 101, movement: 'out', quantity: 18 },
+//                     { id: 102, movement: 'in',  quantity: 22 },
+//                     { id: 103, movement: 'out', quantity: 15 }, ];
+
+// console.log(transactionsFor(101, transactions));
+// returns
+// [ { id: 101, movement: "in",  quantity:  5 },
+//   { id: 101, movement: "in",  quantity: 12 },
+//   { id: 101, movement: "out", quantity: 18 },]
+
+
+/* Grocery List 20 mins
+Write a function that takes a grocery list in a two-dimensional
+array and returns a one-dimensional array. Each element in the
+grocery list contains a fruit name and a number that represents
+the desired quantity of that fruit. The output array is such
+that each fruit name appears the number of times equal to its
+desired quantity.
+
+In the example below, we want to buy 3 apples, 1 orange, and 2 bananas. Thus, we return an array that contains 3 apples, 1 orange, and 2 bananas.
+
+P
+buyFruit(Array[...Arrays]) => Array
+
+grocery list = two-dimensional array of fruits [name, quantity]
+output array has each fruit name repeat the desired quantity number of times [["apple", 3]] => ["apple", "apple", "apple"]
+
+D
+Arrays
+
+A
+Iterate each fruit
+    Iterate quantity number of times
+    Add the fruitName to the shopping list
+Return the shopping list
+
+C
+for of to iterate each fruit
+for i to iterate quantity
+push to add to the shopping list
+*/
+
+// function buyFruit(arr) {
+//   const shoppingList = [];
+
+//   return arr.map(ele => {
+//     let fruit = ele[0];
+//     let times = ele.splice(1)[0];
+
+//     for (let i = 1; i < times; i += 1) {
+//       ele.push(fruit);
+//     }
+//     return ele;
+//   }).flat();
+// }
+
+function buyFruit(fruits) {
+    const shoppingList = [];
+    for (let i = 0; i < fruits.length; i++) {
+        for (let quantity = fruits[i][1]; quantity > 0; quantity--) {
+            shoppingList.push(fruits[i][0]);
+        }
+    }
+    return shoppingList;
+}
+
+// Example:
+// output = buyFruit([['apple', 3], ['orange', 1], ['banana', 2]]);
+// returns ["apple", "apple", "apple", "orange", "banana", "banana"]
+
 /*
 Sum of Sums
 10:48-11:11 21 min
