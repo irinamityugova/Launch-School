@@ -93,6 +93,7 @@ function displayMessage(message) {
 
 function resetBoard(moves) {
   moves.splice(0, 0, [], [], []);
+  moves[0] = ' ';
   moves.forEach((row) => row.splice(0, 0, ' ', ' ', ' '));
   return moves;
 }
