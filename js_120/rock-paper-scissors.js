@@ -21,7 +21,8 @@ Spock vaporizes Rock
 The result of the round gets displayed.
 
 2. Extract the significant nouns and verbs from the description.
-Nouns: Guide, Leaderboard, Round, Turn, Person, Computer, Moves: Rock (r) Paper (p) Scissors (s) Lizard (l) Spok (sp)
+Nouns: Guide, Leaderboard, Round, Turn, Person, Computer,
+Moves: Rock (r) Paper (p) Scissors (s) Lizard (l) Spok (sp)
 Verbs: switchTurn, makeMove, getWinner, display
 
 3. Organize and associate the verbs with the nouns.
@@ -88,89 +89,95 @@ RPSGame {
 
 import rlSync from 'readline-sync';
 
-function createPlayer(moves, playerType = 'bot', name = 'computer') {
+const round = {
+  time: Date.now(),
+  winner: null,
+  repeat: true,
+};
+
+const moves = {
+  r: {
+    wins: {
+      lizard: 'smashes',
+      scissors: 'crushes',
+    },
+    name: 'rock',
+  },
+  p: {
+    wins: {
+      rock: 'covers',
+      spock: 'disproves',
+    },
+    name: 'paper',
+  },
+  s: {
+    wins: {
+      paper: 'cuts',
+      lizard: 'decapitates',
+    },
+    name: 'scissors',
+  },
+  sp: {
+    wins: {
+      rock: 'vaporizes',
+      scissors: 'smashes',
+    },
+    name: 'spock',
+  },
+  l: {
+    wins: {
+      paper: 'eats',
+      spock: 'poisons',
+    },
+    name: 'lizard',
+  },
+};
+
+function createPlayer(name = 'computer') {
   const player = {
-    playerType,
     name,
-    moves,
     move: null,
-
-    choose() {
-      const choices = Object.keys(this.moves);
-
-      if (this.isHuman()) {
-        console.log(`Pick your move:${choices.map((choice, index) => `\n${index + 1} - ${choice}`)}`);
-        let index = -1;
-
-        while (index >= choices.length || index < 0 || isNaN(Number(index))) {
-          index = rlSync.question('> ') - 1;
-        }
-
-        const shortcut = choices[index];
-        this.move = moves[shortcut];
-
-        console.log(`You picked "${this.move.name}"`);
-      } else {
-        const index = parseInt((Math.random() * (choices.length)), 10);
-        const shortcut = choices[index];
-        this.move = moves[shortcut];
-
-        console.log(`Opponent picked "${this.move.name}".`);
-      }
-    },
-
-    isHuman() {
-      return this.playerType === 'human';
-    },
   };
   return player;
 }
 
-const round = {
-    time: Date.now(),
-    winner: null,
-    repeat: true,
-    moves: {
-    'r': {
-      wins: {
-        'lizard': 'smashes',
-        'scissors': 'crushes'
-      },
-      name: 'rock',
+function createHuman(name) {
+  const player = createPlayer();
+  const human = {
+    name,
+    choose() {
+      const choices = Object.keys(moves);
+      console.log(`Pick your move:${choices.map((choice) => `\n"${choice}" for ${moves[choice].name}`)}`);
+      let shortcut = '';
+      while (!choices.includes(shortcut)) {
+        shortcut = rlSync.question('> ');
+      }
+
+      this.move = moves[shortcut];
+
+      console.log(`You picked "${this.move.name}"`);
     },
-    'p': {
-      wins: {
-        'rock': 'covers',
-        'spock': 'disproves'
-      },
-      name: 'paper',
+  };
+  return Object.assign(player, human);
+}
+
+function createBot() {
+  const player = createPlayer();
+  const bot = {
+    choose() {
+      const choices = Object.keys(moves);
+      const index = parseInt((Math.random() * (choices.length)), 10);
+      const shortcut = choices[index];
+      this.move = moves[shortcut];
+
+      console.log(`Opponent picked "${this.move.name}".`);
     },
-    's': {
-      wins: {
-        'paper': 'cuts',
-        'lizard': 'decapitates'
-      },
-      name: 'scissors',
-    },
-    'sp': {
-      wins: {
-        'rock': 'vaporizes',
-        'scissors': 'smashes'
-      },
-      name: 'spock',
-    },
-    'l': {
-      wins: {
-        'paper': 'eats',
-        'spock': 'poisons'
-      },
-      name: 'lizard',
-    },
-  },
-};
+  };
+  return Object.assign(player, bot);
+}
 
 const playRPS = {
-    guide: `
+  guide: `
 |-------------------------------------------------|
 |         Welcome to Rock Paper Scissors!         |
 |-------------------------------------------------|
@@ -190,42 +197,42 @@ const playRPS = {
   `,
 
   history: [
-      {
-        winner: 'test',
-        time: 'testTime',
-        move: 'move',
-      },
-    ],
+    {
+      winner: 'test',
+      time: 'testTime',
+      move: 'move',
+    },
+  ],
 
-  human: createPlayer(round.moves, 'human', 'Irina'),
-  bot: createPlayer(round.moves),
+  human: createHuman('Irina'),
+  bot: createBot(),
 
   displayWinner() {
-    let humanMove = this.human.move.name;
-    let botMove = this.bot.move.name;
-    let humanWinMoves = this.human.move.wins;
-    let botWinMoves = this.bot.move.wins;
+    const humanMove = this.human.move.name;
+    const botMove = this.bot.move.name;
+    const humanWinMoves = this.human.move.wins;
+    const botWinMoves = this.bot.move.wins;
 
-    if(humanWinMoves.hasOwnProperty(botMove)) {
+    if (humanWinMoves.hasOwnProperty(botMove)) {
       console.log(`You won! Your ${humanMove} ${humanWinMoves[botMove]} ${this.bot.name}'s ${botMove}`);
-      this['history'].push({
+      this.history.push({
         winner: this.human.name,
         time: Date.now(),
-        move: humanMove
+        move: humanMove,
       });
-    } else if(humanMove === botMove) {
+    } else if (humanMove === botMove) {
       console.log(`Whoops, ${humanMove}s knocked each other out!`);
-      this['history'].push({
+      this.history.push({
         winner: 'tie',
         time: Date.now(),
-        move: humanMove
+        move: humanMove,
       });
     } else {
       console.log(`Oh no! The ${this.bot.name}'s ${botMove} ${botWinMoves[humanMove]} your ${humanMove}`);
-      this['history'].push({
+      this.history.push({
         winner: this.bot.name,
         time: Date.now(),
-        move: botMove
+        move: botMove,
       });
     }
   },
@@ -237,14 +244,13 @@ const playRPS = {
       this.bot.choose();
       this.displayWinner(this.human.move.name, this.bot.move.name);
 
-      let playAgain = rlSync.question('Play again? yes/no\n> ');
+      const playAgain = rlSync.question('Play again? yes/no\n> ');
       if (playAgain.toLowerCase().match(/n/i)) {
         round.repeat = false;
       }
       console.clear();
     }
     console.log('Goodbye!');
-    return "Goodbye!";
   },
 };
 
