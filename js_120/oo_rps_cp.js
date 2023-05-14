@@ -9,38 +9,41 @@ Replace the factory function invocations with constructor calls.
 
 import readline from 'readline-sync';
 
-function CreatePlayer() {
+function Player() {
     this.move = null;
 }
 
-function CreateComputer() {
-  Object.setPrototypeOf(this, CreatePlayer);
-  this.choose = function() {
+function Computer() {
+  Player.call(this);
+}
+
+Computer.prototype.choose = function() {
       const choices = ['rock', 'paper', 'scissors'];
       let randomIndex = Math.floor(Math.random() * choices.length);
       this.move = choices[randomIndex];
     };
+
+function Human() {
+  Player.call(this);
 }
 
-function CreateHuman() {
-  Object.setPrototypeOf(this, CreatePlayer);
-  this.choose = function() {
+Human.prototype.choose = function() {
+  while (true) {
+    console.log('Please choose rock, paper, or scissors:');
+    this.choice = readline.question();
+    if (['rock', 'paper', 'scissors'].includes(this.choice)) break;
+    console.log('Sorry, invalid choice.');
+  }
 
-    while (true) {
-      console.log('Please choose rock, paper, or scissors:');
-      this.choice = readline.question();
-      if (['rock', 'paper', 'scissors'].includes(this.choice)) break;
-      console.log('Sorry, invalid choice.');
-    }
+  this.move = this.choice;
+};
 
-    this.move = this.choice;
-  };
+function RPSGame() {
+  this.human = new Human();
+  this.computer = new Computer();
 }
 
-const RPSGame = {
-  human: new CreateHuman(),
-  computer: new CreateComputer(),
-
+RPSGame.prototype = {
   displayWelcomeMessage() {
     console.log('Welcome to Rock, Paper, Scissors!');
   },
@@ -50,11 +53,11 @@ const RPSGame = {
   },
 
   displayWinner() {
-    console.log(`You chose: ${this.human.move}`);
-    console.log(`The computer chose: ${this.computer.move}`);
-
     let humanMove = this.human.move;
     let computerMove = this.computer.move;
+
+    console.log(`You chose: ${humanMove}`);
+    console.log(`The computer chose: ${computerMove}`);
 
     if ((humanMove === 'rock' && computerMove === 'scissors') ||
         (humanMove === 'paper' && computerMove === 'rock') ||
@@ -88,4 +91,7 @@ const RPSGame = {
   },
 };
 
-RPSGame.play();
+RPSGame.prototype.constructor = RPSGame;
+
+const game = new RPSGame;
+game.play();
