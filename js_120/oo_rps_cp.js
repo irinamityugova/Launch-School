@@ -1,56 +1,60 @@
 // Rewriting OO RPS with Constructors and Classes
 
 /*
-Write a constructor function for each factory function.
-Move the initialization code from the factory function into the constructor.
-Move all the other methods from the factory function into the constructor's prototype.
-Replace the factory function invocations with constructor calls.
+Write a class with the same name as the original constructor function.
+Move the constructor function into the class and rename it as constructor.
+Move all the prototype functions into the class.
 */
 
 import readline from 'readline-sync';
 
-function Player() {
-    this.move = null;
+class Player {
+    constructor() {
+      this.move = null;
+    }
 }
 
-function Computer() {
-  Player.call(this);
-}
-
-Computer.prototype.choose = function() {
-      const choices = ['rock', 'paper', 'scissors'];
-      let randomIndex = Math.floor(Math.random() * choices.length);
-      this.move = choices[randomIndex];
-    };
-
-function Human() {
-  Player.call(this);
-}
-
-Human.prototype.choose = function() {
-  while (true) {
-    console.log('Please choose rock, paper, or scissors:');
-    this.choice = readline.question();
-    if (['rock', 'paper', 'scissors'].includes(this.choice)) break;
-    console.log('Sorry, invalid choice.');
+class Computer extends Player {
+  constructor() {
+    super();
   }
 
-  this.move = this.choice;
-};
-
-function RPSGame() {
-  this.human = new Human();
-  this.computer = new Computer();
+  choose() {
+    const choices = ['rock', 'paper', 'scissors'];
+    let randomIndex = Math.floor(Math.random() * choices.length);
+    this.move = choices[randomIndex];
+  }
 }
 
-RPSGame.prototype = {
+class Human extends Player {
+  constructor() {
+    super();
+  }
+
+  choose() {
+    while (true) {
+      console.log('Please choose rock, paper, or scissors:');
+      this.choice = readline.question();
+      if (['rock', 'paper', 'scissors'].includes(this.choice)) break;
+      console.log('Sorry, invalid choice.');
+    }
+
+    this.move = this.choice;
+  }
+}
+
+class RPSGame {
+  constructor() {
+    this.human = new Human();
+    this.computer = new Computer();
+  }
   displayWelcomeMessage() {
     console.log('Welcome to Rock, Paper, Scissors!');
-  },
+  }
 
   displayGoodbyeMessage() {
     console.log('Thanks for playing Rock, Paper, Scissors. Goodbye!');
-  },
+  }
 
   displayWinner() {
     let humanMove = this.human.move;
@@ -70,13 +74,13 @@ RPSGame.prototype = {
     } else {
       console.log("It's a tie");
     }
-  },
+  }
 
   playAgain() {
     console.log('Would you like to play again? (y/n)');
     let answer = readline.question();
     return answer.toLowerCase()[0] === 'y';
-  },
+  }
 
   play() {
     this.displayWelcomeMessage();
@@ -88,10 +92,8 @@ RPSGame.prototype = {
     }
 
     this.displayGoodbyeMessage();
-  },
-};
-
-RPSGame.prototype.constructor = RPSGame;
+  }
+}
 
 const game = new RPSGame;
 game.play();
