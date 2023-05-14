@@ -7,51 +7,39 @@ Move all the other methods from the factory function into the constructor's prot
 Replace the factory function invocations with constructor calls.
 */
 
-let readline = require('readline-sync');
+import readline from 'readline-sync';
 
-function createPlayer() {
-  return {
-    move: null,
-  };
+function CreatePlayer() {
+    this.move = null;
 }
 
-function createComputer() {
-  let playerObject = createPlayer();
-
-  let computerObject = {
-    choose() {
+function CreateComputer() {
+  Object.setPrototypeOf(this, CreatePlayer);
+  this.choose = function() {
       const choices = ['rock', 'paper', 'scissors'];
       let randomIndex = Math.floor(Math.random() * choices.length);
       this.move = choices[randomIndex];
-    },
-  };
-
-  return Object.assign(playerObject, computerObject);
+    };
 }
 
-function createHuman() {
-  let playerObject = createPlayer();
-  let humanObject = {
-    choose() {
-      let choice;
+function CreateHuman() {
+  Object.setPrototypeOf(this, CreatePlayer);
+  this.choose = function() {
 
-      while (true) {
-        console.log('Please choose rock, paper, or scissors:');
-        choice = readline.question();
-        if (['rock', 'paper', 'scissors'].includes(choice)) break;
-        console.log('Sorry, invalid choice.');
-      }
+    while (true) {
+      console.log('Please choose rock, paper, or scissors:');
+      this.choice = readline.question();
+      if (['rock', 'paper', 'scissors'].includes(this.choice)) break;
+      console.log('Sorry, invalid choice.');
+    }
 
-      this.move = choice;
-    },
+    this.move = this.choice;
   };
-
-  return Object.assign(playerObject, humanObject);
 }
 
 const RPSGame = {
-  human: createHuman(),
-  computer: createComputer(),
+  human: new CreateHuman(),
+  computer: new CreateComputer(),
 
   displayWelcomeMessage() {
     console.log('Welcome to Rock, Paper, Scissors!');
