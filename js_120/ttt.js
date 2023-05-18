@@ -30,15 +30,15 @@ Update the board
 */
 import rlSync from 'readline-sync';
 
-class Board {
-  constructor() {
-    this.squares = {};
+function Board() {
+
+  this.squares = {};
     for (let counter = 1; counter <= 9; ++counter) {
       this.squares[String(counter)] = new Square();
     }
   }
 
-  display(type = 'moves') {
+  Board.prototype.display = function (type = 'moves') {
     let board = [];
     for (let i = 7; i >= 1; i -= 3) {
       let row = [];
@@ -54,73 +54,70 @@ class Board {
     console.log(board.join('\n---+---+---\n'));
   }
 
-  displayWithClear() {
+  Board.prototype.displayWithClear = function () {
     console.clear();
     this.display();
   }
 
-  markSquareAt(key, marker) {
+  Board.prototype.markSquareAt = function (key, marker) {
     this.squares[key].setMarker(marker);
   }
 
-  unusedSquares() {
+  Board.prototype.unusedSquares = function () {
     let unusedSquares = Object.keys(this.squares).filter(key => {
       return this.squares[key].marker === ' ';
     });
     return unusedSquares;
   }
 
-  countMarkersFor(player, keys) {
+  Board.prototype.countMarkersFor = function (player, keys) {
     let markers = keys.filter(key => {
       return this.squares[key].getMarker() === player.getMarker();
     });
 
     return markers.length;
   }
+
+function Square(marker = ' ') {
+  this.marker = marker;
 }
 
-class Square {
-  static HUMAN_MARKER = 'X'
-  static COMPUTER_MARKER = 'O'
-  static UNUSED_MARKER = ' '
+Square.HUMAN_MARKER = 'X'
+Square.COMPUTER_MARKER = 'O'
+Square.UNUSED_MARKER = ' '
 
-  constructor(marker = ' ') {
-    this.marker = marker;
-  }
-
-  toString() {
+  Square.prototype.toString = function () {
     return this.marker;
   }
 
-  setMarker(marker) {
+  Square.prototype.setMarker = function (marker) {
     this.marker = marker;
   }
 
-  isUnused() {
+  Square.prototype.isUnused = function () {
     return this.marker === Square.UNUSED_SQUARE;
   }
 
-  getMarker() {
+  Square.prototype.getMarker = function () {
     return this.marker;
   }
-}
 
-class Player {
-  constructor(marker) {
+function Player(marker) {
     this.marker = marker;
   }
 
-  getMarker() {
+  Player.prototype.getMarker = function () {
     return this.marker;
   }
-}
 
-class Human extends Player {
-  constructor() {
-    super(Square.HUMAN_MARKER);
+function Human() {
+  Player.call(this, Square.HUMAN_MARKER);
   }
 
-  move() {
+Human.prototype = Object.create(Player.prototype);
+Human.constructor = Human;
+
+  Human.prototype.move = function () {
     let choice;
 
     while (true) {
@@ -136,25 +133,24 @@ class Human extends Player {
 
     game.board.markSquareAt(choice, Square.HUMAN_MARKER);
   }
-}
 
-class Computer extends Player {
-  constructor() {
-    super(Square.COMPUTER_MARKER);
+function Computer() {
+    Player.call(this, Square.COMPUTER_MARKER);
   }
 
-  move() {
+  Computer.prototype = Object.create(Player.prototype);
+  Computer.constructor = Computer;
+
+  Computer.prototype.move = function () {
     let mark = Square.COMPUTER_MARKER;
     let answers = game.board.unusedSquares();
     const i = Math.floor(Math.random() * answers.length);
     let move = answers[Number(i)];
     game.board.markSquareAt(move, mark);
   }
-}
 
-class TTTGame {
-
-  static POSSIBLE_WINNING_ROWS = [
+function TTTGame() {}
+TTTGame.POSSIBLE_WINNING_ROWS = [
     [ "1", "2", "3" ],            // top row of board
     [ "4", "5", "6" ],            // center row of board
     [ "7", "8", "9" ],            // bottom row of board
@@ -164,14 +160,11 @@ class TTTGame {
     [ "1", "5", "9" ],            // diagonal: top-left to bottom-right
     [ "3", "5", "7" ],            // diagonal: bottom-left to top-right
   ];
+    TTTGame.prototype.board = new Board;
+    TTTGame.prototype.human = new Human;
+    TTTGame.prototype.computer = new Computer;
 
-  constructor() {
-    this.board = new Board;
-    this.human = new Human;
-    this.computer = new Computer;
-  }
-
-  play() {
+  TTTGame.prototype.play = function () {
       while(true) {
         this.displayWelcomeMessage()
         this.board.display('guide');
@@ -193,34 +186,34 @@ class TTTGame {
     }
   }
 
-  displayWelcomeMessage() {
+  TTTGame.prototype.displayWelcomeMessage = function () {
     console.log("Welcome to Tic Tac Toe!");
   }
 
-  displayGoodbyeMessage() {
+  TTTGame.prototype.displayGoodbyeMessage = function () {
     console.log("Thanks for playing Tic Tac Toe!");
   }
 
-  gameOver() {
+  TTTGame.prototype.gameOver = function () {
     return this.boardIsFull() || this.someoneWon();
   }
 
-  boardIsFull() {
+  TTTGame.prototype.boardIsFull = function () {
     let unusedSquares = this.board.unusedSquares().length;
     return unusedSquares === 0;
   }
 
-  someoneWon() {
+  TTTGame.prototype.someoneWon = function () {
     return this.isWinner(this.human) || this.isWinner(this.computer);
   }
 
-  isWinner(player) {
+  TTTGame.prototype.isWinner = function (player) {
     return TTTGame.POSSIBLE_WINNING_ROWS.some(row => {
       return this.board.countMarkersFor(player, row) === 3;
     });
   }
 
-  displayResults() {
+  TTTGame.prototype.displayResults = function () {
     if (this.isWinner(this.human)) {
       console.log("You won! Congratulations!");
     } else if (this.isWinner(this.computer)) {
@@ -230,7 +223,7 @@ class TTTGame {
     }
   }
 
-  repeatGame() {
+  TTTGame.prototype.repeatGame = function () {
     let input = rlSync.question('Repeat y/n\n');
     if (input.includes('y')) {
       this.board = new Board;
@@ -238,7 +231,7 @@ class TTTGame {
     }
     return false;
   }
-}
+
 
 const game = new TTTGame;
 game.play();
