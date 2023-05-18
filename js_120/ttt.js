@@ -30,15 +30,16 @@ Update the board
 */
 import rlSync from 'readline-sync';
 
-function Board() {
+ const Board = {
+  init() {
+    this.squares = {};
+      for (let counter = 1; counter <= 9; ++counter) {
+        this.squares[String(counter)] = Object.create(Square.init());
+      }
+    return this;
+  },
 
-  this.squares = {};
-    for (let counter = 1; counter <= 9; ++counter) {
-      this.squares[String(counter)] = new Square();
-    }
-  }
-
-  Board.prototype.display = function (type = 'moves') {
+  display(type = 'moves') {
     let board = [];
     for (let i = 7; i >= 1; i -= 3) {
       let row = [];
@@ -52,72 +53,78 @@ function Board() {
       board.push(' ' + row.join(' | ') + ' ');
     }
     console.log(board.join('\n---+---+---\n'));
-  }
+  },
 
-  Board.prototype.displayWithClear = function () {
+  displayWithClear() {
     console.clear();
     this.display();
-  }
+  },
 
-  Board.prototype.markSquareAt = function (key, marker) {
+  markSquareAt(key, marker) {
     this.squares[key].setMarker(marker);
-  }
+  },
 
-  Board.prototype.unusedSquares = function () {
+  unusedSquares() {
     let unusedSquares = Object.keys(this.squares).filter(key => {
       return this.squares[key].marker === ' ';
     });
     return unusedSquares;
-  }
+  },
 
-  Board.prototype.countMarkersFor = function (player, keys) {
+  countMarkersFor(player, keys) {
     let markers = keys.filter(key => {
       return this.squares[key].getMarker() === player.getMarker();
     });
 
     return markers.length;
-  }
+  },
+};
 
-function Square(marker = ' ') {
-  this.marker = marker;
-}
+const Square = {
+  HUMAN_MARKER: 'X',
+  COMPUTER_MARKER: 'O',
+  UNUSED_MARKER: ' ',
 
-Square.HUMAN_MARKER = 'X'
-Square.COMPUTER_MARKER = 'O'
-Square.UNUSED_MARKER = ' '
-
-  Square.prototype.toString = function () {
-    return this.marker;
-  }
-
-  Square.prototype.setMarker = function (marker) {
+  init(marker = ' ') {
     this.marker = marker;
-  }
+    return this;
+  },
 
-  Square.prototype.isUnused = function () {
+  toString() {
+    return this.marker;
+  },
+
+  setMarker(marker) {
+    this.marker = marker;
+  },
+
+  isUnused() {
     return this.marker === Square.UNUSED_SQUARE;
-  }
+  },
 
-  Square.prototype.getMarker = function () {
+  getMarker() {
     return this.marker;
-  }
+  },
+};
 
-function Player(marker) {
+const Player = {
+  init(marker) {
     this.marker = marker;
-  }
+    return this;
+  },
 
-  Player.prototype.getMarker = function () {
+  getMarker() {
     return this.marker;
-  }
+  },
+};
 
-function Human() {
-  Player.call(this, Square.HUMAN_MARKER);
-  }
+const Human = {
+  init() {
+    Object.setPrototypeOf(this, Player.init(Square.HUMAN_MARKER));
+    return this;
+  },
 
-Human.prototype = Object.create(Player.prototype);
-Human.constructor = Human;
-
-  Human.prototype.move = function () {
+  move() {
     let choice;
 
     while (true) {
@@ -132,25 +139,35 @@ Human.constructor = Human;
     }
 
     game.board.markSquareAt(choice, Square.HUMAN_MARKER);
-  }
+  },
+};
 
-function Computer() {
-    Player.call(this, Square.COMPUTER_MARKER);
-  }
+const Computer = {
+  init() {
+    Object.setPrototypeOf(this, Player.init(Square.COMPUTER_MARKER));
+    return this;
+  },
 
-  Computer.prototype = Object.create(Player.prototype);
-  Computer.constructor = Computer;
-
-  Computer.prototype.move = function () {
-    let mark = Square.COMPUTER_MARKER;
+  move() {
     let answers = game.board.unusedSquares();
     const i = Math.floor(Math.random() * answers.length);
     let move = answers[Number(i)];
-    game.board.markSquareAt(move, mark);
+    game.board.markSquareAt(move, Square.COMPUTER_MARKER);
   }
+};
 
-function TTTGame() {}
-TTTGame.POSSIBLE_WINNING_ROWS = [
+Computer.prototype = Object.create(Player.init());
+Computer.constructor = Computer;
+
+const TTTGame = {
+  init() {
+    this.board = Object.create(Board.init());
+    this.human = Object.create(Human.init());
+    this.computer = Object.create(Computer.init());
+    return this;
+  },
+
+  POSSIBLE_WINNING_ROWS: [
     [ "1", "2", "3" ],            // top row of board
     [ "4", "5", "6" ],            // center row of board
     [ "7", "8", "9" ],            // bottom row of board
@@ -159,13 +176,10 @@ TTTGame.POSSIBLE_WINNING_ROWS = [
     [ "3", "6", "9" ],            // right column of board
     [ "1", "5", "9" ],            // diagonal: top-left to bottom-right
     [ "3", "5", "7" ],            // diagonal: bottom-left to top-right
-  ];
-    TTTGame.prototype.board = new Board;
-    TTTGame.prototype.human = new Human;
-    TTTGame.prototype.computer = new Computer;
+  ],
 
-  TTTGame.prototype.play = function () {
-      while(true) {
+  play() {
+    while(true) {
         this.displayWelcomeMessage()
         this.board.display('guide');
       while (true) {
@@ -184,36 +198,36 @@ TTTGame.POSSIBLE_WINNING_ROWS = [
 
       if(!this.repeatGame()) break;
     }
-  }
+  },
 
-  TTTGame.prototype.displayWelcomeMessage = function () {
+  displayWelcomeMessage() {
     console.log("Welcome to Tic Tac Toe!");
-  }
+  },
 
-  TTTGame.prototype.displayGoodbyeMessage = function () {
+  displayGoodbyeMessage() {
     console.log("Thanks for playing Tic Tac Toe!");
-  }
+  },
 
-  TTTGame.prototype.gameOver = function () {
+  gameOver() {
     return this.boardIsFull() || this.someoneWon();
-  }
+  },
 
-  TTTGame.prototype.boardIsFull = function () {
+  boardIsFull() {
     let unusedSquares = this.board.unusedSquares().length;
     return unusedSquares === 0;
-  }
+  },
 
-  TTTGame.prototype.someoneWon = function () {
+  someoneWon() {
     return this.isWinner(this.human) || this.isWinner(this.computer);
-  }
+  },
 
-  TTTGame.prototype.isWinner = function (player) {
+  isWinner(player) {
     return TTTGame.POSSIBLE_WINNING_ROWS.some(row => {
       return this.board.countMarkersFor(player, row) === 3;
     });
-  }
+  },
 
-  TTTGame.prototype.displayResults = function () {
+  displayResults() {
     if (this.isWinner(this.human)) {
       console.log("You won! Congratulations!");
     } else if (this.isWinner(this.computer)) {
@@ -221,17 +235,17 @@ TTTGame.POSSIBLE_WINNING_ROWS = [
     } else {
       console.log("A tie game. How boring.");
     }
-  }
+  },
 
-  TTTGame.prototype.repeatGame = function () {
+  repeatGame() {
     let input = rlSync.question('Repeat y/n\n');
     if (input.includes('y')) {
       this.board = new Board;
       return true;
     }
     return false;
-  }
+  },
+};
 
-
-const game = new TTTGame;
+const game = Object.create(TTTGame.init());
 game.play();
