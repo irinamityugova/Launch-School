@@ -71,6 +71,10 @@ import rlSync from 'readline-sync';
     return unusedSquares;
   },
 
+  isUnusedSquare(key) {
+    return this.unusedSquares().includes(key)
+  },
+
   countMarkersFor(player, keys) {
     let markers = keys.filter(key => {
       return this.squares[key].getMarker() === player.getMarker();
@@ -107,8 +111,8 @@ const Square = {
   },
 };
 
-const Player = {
-  init(marker) {
+const PlayerPrototype = {
+  initialize(marker) {
     this.marker = marker;
     return this;
   },
@@ -118,13 +122,13 @@ const Player = {
   },
 };
 
-const Human = {
-  init() {
-    Object.setPrototypeOf(this, Player.init(Square.HUMAN_MARKER));
-    return this;
-  },
+let Human = Object.create(PlayerPrototype);
 
-  move() {
+Human.init = function init() {
+  return this.initialize(Square.HUMAN_MARKER);
+};
+
+Human.move = function move() {
     let choice;
 
     while (true) {
@@ -134,60 +138,50 @@ const Human = {
         break;
       }
 
-      console.log("Sorry, that's not a valid choice.");
-      console.log("");
+      console.log('Sorry, that\'s not a valid choice.');
+      console.log('Try again:');
     }
 
     game.board.markSquareAt(choice, Square.HUMAN_MARKER);
-  },
 };
 
-const Computer = {
-  init() {
-    Object.setPrototypeOf(this, Player.init(Square.COMPUTER_MARKER));
-    return this;
-  },
+const Computer = Object.create(PlayerPrototype);
 
-  move() {
-    let answers = game.board.unusedSquares();
-    const i = Math.floor(Math.random() * answers.length);
-    let move = answers[Number(i)];
-    game.board.markSquareAt(move, Square.COMPUTER_MARKER);
-  }
+Computer.init = function init() {
+  return this.initialize(Square.COMPUTER_MARKER);
 };
-
-Computer.prototype = Object.create(Player.init());
-Computer.constructor = Computer;
 
 const TTTGame = {
   init() {
-    this.board = Object.create(Board.init());
-    this.human = Object.create(Human.init());
-    this.computer = Object.create(Computer.init());
+    this.board = Object.create(Board).init();
+    this.human = Object.create(Human).init();
+    this.computer = Object.create(Computer).init();
+
     return this;
   },
 
   POSSIBLE_WINNING_ROWS: [
-    [ "1", "2", "3" ],            // top row of board
-    [ "4", "5", "6" ],            // center row of board
-    [ "7", "8", "9" ],            // bottom row of board
-    [ "1", "4", "7" ],            // left column of board
-    [ "2", "5", "8" ],            // middle column of board
-    [ "3", "6", "9" ],            // right column of board
-    [ "1", "5", "9" ],            // diagonal: top-left to bottom-right
-    [ "3", "5", "7" ],            // diagonal: bottom-left to top-right
+    ['1', '2', '3'], // top row of board
+    ['4', '5', '6'], // center row of board
+    ['7', '8', '9'], // bottom row of board
+    ['1', '4', '7'], // left column of board
+    ['2', '5', '8'], // middle column of board
+    ['3', '6', '9'], // right column of board
+    ['1', '5', '9'], // diagonal: top-left to bottom-right
+    ['3', '5', '7'], // diagonal: bottom-left to top-right
   ],
 
   play() {
-    while(true) {
-        this.displayWelcomeMessage()
-        this.board.display('guide');
+    while (true) {
+      this.displayWelcomeMessage();
+      this.board.display('guide');
+
       while (true) {
         this.human.move();
         this.board.displayWithClear();
         if (this.gameOver()) break;
 
-        this.computer.move();
+        this.computerMove();
         this.board.displayWithClear();
         if (this.gameOver()) break;
       }
@@ -196,16 +190,16 @@ const TTTGame = {
       this.displayResults();
       this.displayGoodbyeMessage();
 
-      if(!this.repeatGame()) break;
+      if (!this.repeatGame()) break;
     }
   },
 
   displayWelcomeMessage() {
-    console.log("Welcome to Tic Tac Toe!");
+    console.log('Welcome to Tic Tac Toe!');
   },
 
   displayGoodbyeMessage() {
-    console.log("Thanks for playing Tic Tac Toe!");
+    console.log('Thanks for playing Tic Tac Toe!');
   },
 
   gameOver() {
@@ -213,7 +207,7 @@ const TTTGame = {
   },
 
   boardIsFull() {
-    let unusedSquares = this.board.unusedSquares().length;
+    const unusedSquares = this.board.unusedSquares().length;
     return unusedSquares === 0;
   },
 
@@ -222,30 +216,71 @@ const TTTGame = {
   },
 
   isWinner(player) {
-    return TTTGame.POSSIBLE_WINNING_ROWS.some(row => {
-      return this.board.countMarkersFor(player, row) === 3;
-    });
+    return TTTGame.POSSIBLE_WINNING_ROWS.some(
+      (row) => {
+        const count = this.board.countMarkersFor(player, row);
+        return count === 3;
+      },
+    );
   },
 
   displayResults() {
     if (this.isWinner(this.human)) {
-      console.log("You won! Congratulations!");
+      console.log('You won! Congratulations!');
     } else if (this.isWinner(this.computer)) {
-      console.log("I won! I won! Take that, human!");
+      console.log('I won! I won! Take that, human!');
     } else {
-      console.log("A tie game. How boring.");
+      console.log('A tie game. How boring.');
     }
   },
 
   repeatGame() {
-    let input = rlSync.question('Repeat y/n\n');
+    const input = rlSync.question('Repeat y/n\n');
+
     if (input.includes('y')) {
-      this.board = new Board;
+      this.board = Object.create(Board.init());
       return true;
     }
+
     return false;
+  },
+
+  computerMove() {
+    const choice = this.defensiveComputerMove() || this.randomMove();
+
+    this.board.markSquareAt(choice, Square.COMPUTER_MARKER);
+  },
+
+  randomMove() {
+    const unusedSquares = this.board.unusedSquares();
+    const random = Math.floor(Math.random(unusedSquares) * unusedSquares.length);
+    const choice = unusedSquares[random];
+
+    return choice;
+  },
+
+  defensiveComputerMove() {
+    for (let index = 0; index < TTTGame.POSSIBLE_WINNING_ROWS.length; index += 1) {
+      const row = TTTGame.POSSIBLE_WINNING_ROWS[index];
+      const key = this.atRiskSquare(row);
+
+      if (key) return key;
+    }
+
+    return null;
+  },
+
+  atRiskSquare(row) {
+    if (this.board.countMarkersFor(this.human, row) === 2) {
+      const index = row.findIndex((key) => this.board.isUnusedSquare(key));
+      if (index >= 0) {
+        return row[index];
+      }
+    }
+
+    return null;
   },
 };
 
-const game = Object.create(TTTGame.init());
+const game = Object.create(TTTGame).init();
 game.play();
