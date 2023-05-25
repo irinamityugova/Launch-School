@@ -168,11 +168,52 @@ Computer.init = function init() {
   return this.initialize(Square.COMPUTER_MARKER);
 };
 
+Computer.move = function move() {
+  const choice = this.bestMoveFor('computer') || this.bestMoveFor('human') || this.centerMove() || this.randomMove();
+
+  game.board.markSquareAt(choice, Square.COMPUTER_MARKER);
+};
+
+Computer.randomMove = function () {
+    const unusedSquares = game.board.unusedSquares();
+    const random = Math.floor(Math.random(unusedSquares) * unusedSquares.length);
+    const choice = unusedSquares[random];
+
+    return choice;
+  };
+
+Computer.bestMoveFor = function bestMoveFor (player) {
+    for (let index = 0; index < TTTGame.POSSIBLE_WINNING_ROWS.length; index += 1) {
+      const row = TTTGame.POSSIBLE_WINNING_ROWS[index];
+      const key = this.bestSquare(row, player);
+
+      if (key) return key;
+    }
+
+    return null;
+  };
+
+Computer.centerMove = function centerMove () {
+    if (game.board.isUnusedSquare('5')) return '5';
+    return null;
+};
+
+Computer.bestSquare = function bestSquare (row, player) {
+    if (game.board.countMarkersFor(game[player], row) === 2) {
+      const index = row.findIndex((key) => game.board.isUnusedSquare(key));
+      if (index >= 0) {
+        return row[index];
+      }
+    }
+    return null;
+};
+
 const TTTGame = {
   init() {
     this.board = Object.create(Board).init();
     this.human = Object.create(Human).init();
     this.computer = Object.create(Computer).init();
+    this.firstPlayer = this.human;
 
     return this;
   },
@@ -189,25 +230,50 @@ const TTTGame = {
   ],
 
   play() {
-    while (true) {
+    do {
+      let currentPlayer = this.firstPlayer;
       this.displayWelcomeMessage();
       this.board.display('guide');
 
       while (true) {
-        this.human.move();
+        this.playerMoves(currentPlayer);
         this.board.displayWithClear();
-        if (this.gameOver()) break;
+        currentPlayer = this.togglePlayer(currentPlayer);
 
-        this.computerMove();
-        this.board.displayWithClear();
         if (this.gameOver()) break;
       }
 
-      this.board.displayWithClear();
       this.displayResults();
       this.displayGoodbyeMessage();
 
-      if (!this.repeatGame()) break;
+      this.switchTurns();
+
+    } while (this.repeatGame())
+  },
+
+  playerMoves(player) {
+    player.move();
+  },
+
+  togglePlayer(player) {
+    return player === this.human ? this.computer : this.human;
+  },
+
+  switchTurns() {
+    if (this.human.marker === 'X') {
+      this.human.marker = 'O';
+      this.computer.marker = 'X';
+      this.firstPlayer = this.computer;
+
+      Square.HUMAN_MARKER = 'O';
+      Square.COMPUTER_MARKER = 'X';
+    } else {
+      this.computer.marker = 'O';
+      this.human.marker = 'X';
+      this.firstPlayer = this.human;
+
+      Square.HUMAN_MARKER = 'X';
+      Square.COMPUTER_MARKER = 'O';
     }
   },
 
@@ -257,7 +323,7 @@ const TTTGame = {
     } else {
       console.log('A tie game. How boring.');
     }
-    console.log(`Score: ${this.human.score} (you) to ${this.computer.score} (me)`)
+    console.log(`Score: ${this.human.getScore()} (you) to ${this.computer.getScore()} (me)`)
   },
 
   repeatGame() {
@@ -269,46 +335,6 @@ const TTTGame = {
     }
 
     return false;
-  },
-
-  computerMove() {
-    const choice = this.bestMoveFor('computer') || this.bestMoveFor('human') || this.centerMove() || this.randomMove();
-
-    this.board.markSquareAt(choice, Square.COMPUTER_MARKER);
-  },
-
-  randomMove() {
-    const unusedSquares = this.board.unusedSquares();
-    const random = Math.floor(Math.random(unusedSquares) * unusedSquares.length);
-    const choice = unusedSquares[random];
-
-    return choice;
-  },
-
-  bestMoveFor(player) {
-    for (let index = 0; index < TTTGame.POSSIBLE_WINNING_ROWS.length; index += 1) {
-      const row = TTTGame.POSSIBLE_WINNING_ROWS[index];
-      const key = this.bestSquare(row, player);
-
-      if (key) return key;
-    }
-
-    return null;
-  },
-
-  centerMove() {
-    if (this.board.isUnusedSquare('5')) return '5';
-    return null;
-  },
-
-  bestSquare(row, player) {
-    if (this.board.countMarkersFor(this[player], row) === 2) {
-      const index = row.findIndex((key) => this.board.isUnusedSquare(key));
-      if (index >= 0) {
-        return row[index];
-      }
-    }
-    return null;
   },
 };
 
