@@ -72,7 +72,7 @@ import rlSync from 'readline-sync';
   },
 
   isUnusedSquare(key) {
-    return this.unusedSquares().includes(key)
+    return this.unusedSquares().includes(key);
   },
 
   countMarkersFor(player, keys) {
