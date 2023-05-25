@@ -27,6 +27,14 @@ Display the guide
 Human makes a move
 Computer makes a move
 Update the board
+
+AI Offence
+-  If any square is a potential winner
+    -   Pick that square.
+-   Else if any square is at risk, pick that square.
+    -   Pick that square.
+-   Else:
+    -   Pick a random square.
 */
 import rlSync from 'readline-sync';
 
@@ -246,7 +254,7 @@ const TTTGame = {
   },
 
   computerMove() {
-    const choice = this.defensiveComputerMove() || this.randomMove();
+    const choice = this.offenciveComputerMove() || this.defensiveComputerMove() || this.randomMove();
 
     this.board.markSquareAt(choice, Square.COMPUTER_MARKER);
   },
@@ -268,6 +276,26 @@ const TTTGame = {
     }
 
     return null;
+  },
+
+  offenciveComputerMove() {
+    for (let index = 0; index < TTTGame.POSSIBLE_WINNING_ROWS.length; index += 1) {
+      const row = TTTGame.POSSIBLE_WINNING_ROWS[index];
+      const key = this.winningSquare(row);
+
+      if (key) return key;
+    }
+
+    return null;
+  },
+
+  winningSquare(row) {
+    if (this.board.countMarkersFor(this.computer, row) === 2) {
+      const index = row.findIndex((key) => this.board.isUnusedSquare(key));
+      if (index >= 0) {
+        return row[index];
+      }
+    }
   },
 
   atRiskSquare(row) {
