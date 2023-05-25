@@ -122,11 +122,20 @@ const Square = {
 const PlayerPrototype = {
   initialize(marker) {
     this.marker = marker;
+    this.score = 0;
     return this;
   },
 
   getMarker() {
     return this.marker;
+  },
+
+  addScore() {
+    this.score += 1;
+  },
+
+  getScore() {
+    return this.score;
   },
 };
 
@@ -220,7 +229,15 @@ const TTTGame = {
   },
 
   someoneWon() {
-    return this.isWinner(this.human) || this.isWinner(this.computer);
+    if (this.isWinner(this.human)) {
+      this.human.addScore();
+      return true;
+    }
+    if (this.isWinner(this.computer)) {
+      this.computer.addScore();
+      return true;
+    }
+    return null;
   },
 
   isWinner(player) {
@@ -240,6 +257,7 @@ const TTTGame = {
     } else {
       console.log('A tie game. How boring.');
     }
+    console.log(`Score: ${this.human.score} (you) to ${this.computer.score} (me)`)
   },
 
   repeatGame() {
@@ -254,7 +272,7 @@ const TTTGame = {
   },
 
   computerMove() {
-    const choice = this.offenciveComputerMove() || this.defensiveComputerMove() || this.randomMove();
+    const choice = this.bestMoveFor('computer') || this.bestMoveFor('human') || this.centerMove() || this.randomMove();
 
     this.board.markSquareAt(choice, Square.COMPUTER_MARKER);
   },
@@ -267,10 +285,10 @@ const TTTGame = {
     return choice;
   },
 
-  defensiveComputerMove() {
+  bestMoveFor(player) {
     for (let index = 0; index < TTTGame.POSSIBLE_WINNING_ROWS.length; index += 1) {
       const row = TTTGame.POSSIBLE_WINNING_ROWS[index];
-      const key = this.atRiskSquare(row);
+      const key = this.bestSquare(row, player);
 
       if (key) return key;
     }
@@ -278,34 +296,18 @@ const TTTGame = {
     return null;
   },
 
-  offenciveComputerMove() {
-    for (let index = 0; index < TTTGame.POSSIBLE_WINNING_ROWS.length; index += 1) {
-      const row = TTTGame.POSSIBLE_WINNING_ROWS[index];
-      const key = this.winningSquare(row);
-
-      if (key) return key;
-    }
-
+  centerMove() {
+    if (this.board.isUnusedSquare('5')) return '5';
     return null;
   },
 
-  winningSquare(row) {
-    if (this.board.countMarkersFor(this.computer, row) === 2) {
+  bestSquare(row, player) {
+    if (this.board.countMarkersFor(this[player], row) === 2) {
       const index = row.findIndex((key) => this.board.isUnusedSquare(key));
       if (index >= 0) {
         return row[index];
       }
     }
-  },
-
-  atRiskSquare(row) {
-    if (this.board.countMarkersFor(this.human, row) === 2) {
-      const index = row.findIndex((key) => this.board.isUnusedSquare(key));
-      if (index >= 0) {
-        return row[index];
-      }
-    }
-
     return null;
   },
 };
