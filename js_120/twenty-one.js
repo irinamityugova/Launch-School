@@ -102,23 +102,50 @@ class Player {
   showPoints() {
     console.log(`${this.name}: ${this.points} pts`);
   }
+
+  bust() {
+    return this.points > 21;
+  }
 }
 
 class Dealer extends Player {
   constructor() {
     super('Dealer');
+    this.secondCard;
   }
 
   move(deck) {
-    console.log('Here is my card,');
+    console.log('\nHere is one of my cards. I won\'t show you the second one. Don\'t even ask!');
     this.showHit(deck.randomCard());
-    this.hit(deck.randomCard());
+    this.secondCard = deck.randomCard();
+    this.hit(this.secondCard);
   }
 }
 
 class Human extends Player {
   constructor() {
     super('Irina');
+    this.balance = 100;
+    this.bet = 5;
+  }
+
+  setBet() {
+    do {
+      console.log(`Your balance is $${this.balance}`);
+        this.bet = rlSync.question('How much do you bet? \n');
+    } while (!isNaN(this.bet) && this.balance < this.bet);
+    this.bet = Number(this.bet);
+    this.balance -= this.bet;
+  }
+
+  win() {
+    this.balance += this.bet * 2;
+    console.log(`You won. Congrats! Here is your ${this.bet * 2}. Your new balance is ${this.balance}`);
+  }
+
+  tie() {
+    this.balance += this.bet;
+    console.log(`It's a tie! Here is your ${this.bet}`);
   }
 
   move(deck) {
@@ -130,10 +157,6 @@ class Human extends Player {
     this.hit(card);
     this.showPoints();
   }
-
-  bust() {
-    return this.points > 21;
-  }
 }
 
 class TwentyOneGame {
@@ -144,48 +167,69 @@ class TwentyOneGame {
   }
 
   play() {
+    this.human.setBet();
     this.dealer.move(this.deck);
     if (this.dealer.points === 21) return this.endGame();
 
-    while(this.human.points < 21 && (this.human.points === 0 || rlSync.question('Hit or Stay? ').match(/hit/i))) {
+    while(this.human.points < 21 && (this.human.points === 0 || rlSync.question('Hit or Stay? \n').match(/hit/i))) {
       this.human.move(this.deck);
-    }
-    this.endGame();
 
-    if(rlSync.question('Repeat? y/n ').match(/y/i)) {
-      console.log('---------- New Game ----------');
-      this.dealer = new Dealer();
-      this.human = new Human();
-      this.deck = new Deck();
-      this.play();
+      if (this.human.bust()) {
+        console.log('Busted! I won.');
+        return this.repeat();
+      }
     }
+
+    console.log(`My second card was ${this.dealer.secondCard.name} ${this.dealer.secondCard.suit}`);
+    while(this.dealer.points < 13) {
+      this.dealer.showHit(this.deck.randomCard());
+
+      if (this.human.bust()) {
+        console.log('Busted! You won.');
+        return this.repeat();
+      }
+    }
+
+    this.endGame();
   }
 
   endGame() {
     let dpoints = this.dealer.points;
     let hpoints = this.human.points;
 
-    if (this.human.bust()) {
-      console.log('Busted! I won.');
-      return;
-    }
-
     if (dpoints === 21) {
       console.log('Blackjack! I won.');
-      return;
+      return this.repeat();
     }
 
-    console.log(`Dealer: ${dpoints}`)
-    console.log(`${this.human.name}: ${hpoints}`)
+    console.log(`Dealer: ${dpoints}`);
+    console.log(`${this.human.name}: ${hpoints}`);
 
-    if (hpoints === 21) 'Blackjack! You won.'
+    if (hpoints === 21) {
+      console.log('Blackjack!');
+      this.human.win();
+      return this.repeat();
+    }
 
     if (dpoints > hpoints) {
-      console.log('I won! Take that!');
+      console.log('I won! Money, money, money ~^.^~');
     } else if (hpoints > dpoints) {
-      console.log('You won.')
+      this.human.win();
     } else {
-      console.log('It\'s a tie!')
+      this.human.tie();
+    }
+    this.repeat();
+  }
+
+  repeat() {
+    if(rlSync.question('Repeat? y/n ').match(/y/i)) {
+      console.clear();
+      console.log('---------- New Game ----------');
+      this.dealer.points = 0;
+      this.human.points = 0;
+      this.play();
+    } else {
+      console.log('Goodbye!');
     }
   }
 }
