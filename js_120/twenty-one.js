@@ -14,7 +14,7 @@ If the player goes over 21 points, she busts.
 If the player stays, the dealer plays next.
 If the player didn't bust, it's now the dealer's turn.
 The dealer reveals his face-down card.
-If the dealer's total points are less than 17, he must hit and receive another card.
+If the dealer's points points are less than 17, he must hit and receive another card.
 If the dealer goes over 21 points, he busts.
 If the dealer has 17 points or more, he must stay.
 
@@ -23,7 +23,7 @@ Results of the game are determined.
 OO items
 
 Player (n)
-total ()
+points ()
 
 dealer (n)
 human (n)
@@ -47,8 +47,8 @@ import rlSync from 'readline-sync';
 
 class Deck {
   constructor() {
-    this.suits = ['heart', 'diamond', 'spades', 'clubs']
-    this.names = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+    this.suits = ['heart', 'diamond', 'spades', 'clubs'];
+    this.names = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     this.cards = [];
 
     for (let suit of this.suits) {
@@ -82,28 +82,25 @@ class Card {
 
 class Player {
   constructor(name) {
-    this.total = 0;
+    this.points = 0;
     this.name = name;
   }
 
-  move(deck) {
-    this.hit(deck);
-    if(this.bust()) {
-      console.log("Busted...")
-    }
+  showHit(card) {
+    console.log(`${card.name} ${card.suit}`);
+    this.hit(card);
   }
 
-  hit(deck) {
-    let card = deck.randomCard();
-    if (card.value === 11 && this.total > 10) {
-      this.total += 1;
+  hit(card) {
+    if (card.value === 11 && this.points > 10) {
+      this.points += 1;
     } else {
-      this.total += card.value;
+      this.points += card.value;
     }
   }
 
-  bust() {
-    return this.total > 21;
+  showPoints() {
+    console.log(`${this.name}: ${this.points} pts`);
   }
 }
 
@@ -113,13 +110,10 @@ class Dealer extends Player {
   }
 
   move(deck) {
-    if (this.total <= 11) this.hit(deck);
-
-    if(this.bust()) {
-      console.log("Busted")
-    }
+    console.log('Here is my card,');
+    this.showHit(deck.randomCard());
+    this.hit(deck.randomCard());
   }
-
 }
 
 class Human extends Player {
@@ -127,16 +121,19 @@ class Human extends Player {
     super('Irina');
   }
 
-  hit(deck) {
+  move(deck) {
     let card = deck.randomCard();
-    if (card.value === 11 && this.total > 10) {
-      this.total += 1;
-    } else {
-      this.total += card.value;
-    }
-    console.log(`Total: ${this.total}`)
+
+    console.log(`Your card is ${card.name} ${card.suit}`);
+    if (this.bust()) return;
+
+    this.hit(card);
+    this.showPoints();
   }
 
+  bust() {
+    return this.points > 21;
+  }
 }
 
 class TwentyOneGame {
@@ -147,33 +144,45 @@ class TwentyOneGame {
   }
 
   play() {
-    while(this.dealer.total <= 11) {
-      this.dealer.move(this.deck);
-    }
-    console.log('Dealer\'s dealt the cards')
-    if (this.dealer.total === 21) return this.endGame();
+    this.dealer.move(this.deck);
+    if (this.dealer.points === 21) return this.endGame();
 
-    while(this.human.total === 0 || rlSync.question('Hit or Stay? ').match(/hit/i) && this.human.total <= 21) {
+    while(this.human.points < 21 && (this.human.points === 0 || rlSync.question('Hit or Stay? ').match(/hit/i))) {
       this.human.move(this.deck);
     }
     this.endGame();
 
-    if(rlSync.question('Repeat? y/n ').match(/y/i)) this.play()
+    if(rlSync.question('Repeat? y/n ').match(/y/i)) {
+      console.log('---------- New Game ----------');
+      this.dealer = new Dealer();
+      this.human = new Human();
+      this.deck = new Deck();
+      this.play();
+    }
   }
 
   endGame() {
-    let dTotal = this.dealer.total;
-    let hTotal = this.human.total
+    let dpoints = this.dealer.points;
+    let hpoints = this.human.points;
 
-    console.log(`Dealer: ${dTotal}`)
-    console.log(`${this.human.name}: ${hTotal}`)
+    if (this.human.bust()) {
+      console.log('Busted! I won.');
+      return;
+    }
 
-    if (dTotal === 21) 'Blackjack! I won.'
-    if (hTotal === 21) 'Blackjack! You won.'
+    if (dpoints === 21) {
+      console.log('Blackjack! I won.');
+      return;
+    }
 
-    if (dTotal > hTotal) {
+    console.log(`Dealer: ${dpoints}`)
+    console.log(`${this.human.name}: ${hpoints}`)
+
+    if (hpoints === 21) 'Blackjack! You won.'
+
+    if (dpoints > hpoints) {
       console.log('I won! Take that!');
-    } else if (hTotal > dTotal) {
+    } else if (hpoints > dpoints) {
       console.log('You won.')
     } else {
       console.log('It\'s a tie!')
