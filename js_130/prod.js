@@ -17,7 +17,6 @@ let bar = (function foo(start) {
   let prod = start;
 
   return function bar(factor) {
-    console.log('f =', factor);
     if (factor === 1) {
       return prod;
     }
