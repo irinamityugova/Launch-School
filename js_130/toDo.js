@@ -6,46 +6,55 @@
 // When called with an argument that is already on the list, it removes the element from the list.
 // When called without arguments, it prints all of the items on the list. If the list is empty, it prints an appropriate message.
 
-function makeList() {
-  let list = [];
-  return function(item) {
-    if (item === undefined) {
-
-      if (list.length === 0) {
-        console.log("The list is empty.");
-        return null;
-      }
-
-      list.forEach(e => console.log(e));
-      return null;
-    }
-
-    if (list.includes(item)) {
-      console.log(`Removed "${item}".`);
-      list.splice(list.indexOf(item), 1);
-    } else {
-      console.log(`Added "${item}".`);
-      list.push(item);
-    }
-  };
+function List() {
+  this.items = [];
+  this.list();
 }
 
-let list = makeList();
-list();
+List.prototype = {
+
+  list() {
+    if (this.items.length === 0) {
+      console.log("The list is empty.");
+    } else {
+      this.items.forEach(e => console.log(e));
+    }
+  },
+
+  add(item) {
+    if(this.items.includes(item)) {
+      console.log(`"${item}" is already in the list.`);
+      return null;
+    }
+    console.log(`"${item}" added.`);
+    this.items.push(item);
+  },
+
+  remove(item) {
+    console.log(`"${item}" removed.`);
+    this.items.splice(this.items.indexOf(item), 1);
+  }
+};
+
+let list = new List();
 // The list is empty.
+console.log();
 
-list("make breakfast");
+list.add("make breakfast");
 // make breakfast added!
+console.log();
 
-list("read book");
+list.add("read book");
 // read book added!
+console.log();
 
-list();
+list.list();
 // make breakfast
 // read book
+console.log();
 
-list("make breakfast");
+list.remove("make breakfast");
 // make breakfast removed!
-
-list();
+console.log();
+list.list();
 // read book
