@@ -6,37 +6,42 @@
 // When called with an argument that is already on the list, it removes the element from the list.
 // When called without arguments, it prints all of the items on the list. If the list is empty, it prints an appropriate message.
 
-function List() {
-  this.items = [];
-  this.list();
+// Modify the makeList function so that it returns an object that provides the interface shown above, including add, list, and remove methods.
+
+// Update the implementation from problem 1 so that it retains the use of an object with methods but prevents outside access to the items the object stores internally.
+
+function makeList() {
+  let items = [];
+  let obj = {};
+
+  Object.setPrototypeOf(obj, {
+    list() {
+      if (items.length === 0) {
+        console.log("The list is empty.");
+      } else {
+        items.forEach(e => console.log(e));
+      }
+    },
+
+    add(item) {
+      if(items.includes(item)) {
+        console.log(`"${item}" is already in the list.`);
+        return null;
+      }
+      console.log(`"${item}" added.`);
+      items.push(item);
+    },
+
+    remove(item) {
+      console.log(`"${item}" removed.`);
+      items.splice(items.indexOf(item), 1);
+    }
+  });
+
+  return obj;
 }
 
-List.prototype = {
-
-  list() {
-    if (this.items.length === 0) {
-      console.log("The list is empty.");
-    } else {
-      this.items.forEach(e => console.log(e));
-    }
-  },
-
-  add(item) {
-    if(this.items.includes(item)) {
-      console.log(`"${item}" is already in the list.`);
-      return null;
-    }
-    console.log(`"${item}" added.`);
-    this.items.push(item);
-  },
-
-  remove(item) {
-    console.log(`"${item}" removed.`);
-    this.items.splice(this.items.indexOf(item), 1);
-  }
-};
-
-let list = new List();
+let list = makeList();
 // The list is empty.
 console.log();
 
@@ -57,4 +62,5 @@ list.remove("make breakfast");
 // make breakfast removed!
 console.log();
 list.list();
+
 // read book
