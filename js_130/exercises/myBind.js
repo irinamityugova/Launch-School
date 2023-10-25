@@ -1,8 +1,11 @@
 // Create a function myBind, that accepts two arguments: 1) The function to bind, 2) The context object, and returns a new function that's hard-bound to the passed in context object.
 
+// Alter the myBind function written in the previous exercise to support partial function application of additional arguments to the original function.
+
 function myBind(func, context) {
   return function () {
-    return func.apply(context);
+    let args = Array(...arguments);
+    return func.apply(context, args);
   };
 }
 
@@ -18,4 +21,4 @@ let b = {
 };
 
 let foo = myBind(a.f, b);
-console.log(foo.call(a));
+console.log(foo.call(a, 1, 2, 3));
