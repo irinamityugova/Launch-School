@@ -11,57 +11,68 @@
 // Other than the above properties, methods, and properties inherited from Object.prototype, no other method or property should exist on the object returned by the Account prototype object.
 
 // Here's a sample for your reference:
-let Account = {
-  init(email, password, firstName, lastName) {
-    let errMessage = 'Invalid Password';
+let Account = (function() {
+  function validate(input) {
+      return input === userPassword;
+  }
 
-    function validate(input) {
-      return input === password;
+  function anonymize() {
+    let displayName = '';
+    for (let i = 0; i < 16; i++) {
+      displayName = displayName.concat(String.fromCharCode(Math.floor(33 + Math.random() * 93))
+      );
     }
+    return displayName;
+  }
 
-    Object.setPrototypeOf(this, {
-      reanonymize(input) {
-        if (input === password) {
-            for (let i = 0; i < 16; i++) {
-              this.displayName = this.displayName.concat(String.fromCharCode(Math.floor(33 + Math.random() * 93))
-              );
-            }
-            return true;
-          }
-          return errMessage;
-        },
+  let [userEmail, userPassword, userFirstName, userLastName] = Array(4);
 
-      resetPassword(input, newPass) {
-        if (validate(input)) {
-          password = newPass;
-          return true;
-        } else {
-          return errMessage;
-        }
-      },
+  let errMessage = 'Invalid Password';
 
-      firstName(input) {
-        if (validate(input)) return firstName;
+  return {
+    init(email, password, firstName, lastName) {
+
+      [userEmail, userPassword, userFirstName, userLastName] = [email, password, firstName, lastName];
+
+      this.displayName = anonymize();
+      this.reanonymize(password);
+
+      return this;
+    },
+
+    reanonymize(input) {
+      if (input === userPassword) {
+        this.displayName = anonymize();
+        return true;
+      }
         return errMessage;
-      },
+    },
 
-      lastName(input) {
-        if (validate(input)) return lastName;
+    resetPassword(input, newPass) {
+      if (validate(input)) {
+        userPassword = newPass;
+        return true;
+      } else {
         return errMessage;
-      },
+      }
+    },
 
-      email(input) {
-        if (validate(input)) return email;
-        return errMessage;
-      },
-    });
+    firstName(input) {
+      if (validate(input)) return userFirstName;
+      return errMessage;
+    },
 
-    this.displayName = '';
-    this.reanonymize(password);
+    lastName(input) {
+      if (validate(input)) return userLastName;
+      return errMessage;
+    },
 
-    return this;
-  },
-};
+    email(input) {
+      if (validate(input)) return userEmail;
+      return errMessage;
+    },
+  };
+})();
 
 let fooBar = Object.create(Account).init('foo@bar.com', '123456', 'foo', 'bar');
 
