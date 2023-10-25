@@ -13,6 +13,11 @@
 // Here's a sample for your reference:
 let Account = {
   init(email, password, firstName, lastName) {
+    let errMessage = 'Invalid Password';
+
+    function validate(input) {
+      return input === password;
+    }
 
     Object.setPrototypeOf(this, {
       reanonymize(input) {
@@ -23,31 +28,31 @@ let Account = {
             }
             return true;
           }
-          return 'Invalid Password';
+          return errMessage;
         },
 
       resetPassword(input, newPass) {
-        if (input === password) {
+        if (validate(input)) {
           password = newPass;
           return true;
         } else {
-          return 'Invalid Password';
+          return errMessage;
         }
       },
 
       firstName(input) {
-        if (input === password) return firstName;
-        return 'Invalid Password';
+        if (validate(input)) return firstName;
+        return errMessage;
       },
 
       lastName(input) {
-        if (input === password) return lastName;
-        return 'Invalid Password';
+        if (validate(input)) return lastName;
+        return errMessage;
       },
 
       email(input) {
-        if (input === password) return email;
-        return 'Invalid Password';
+        if (validate(input)) return email;
+        return errMessage;
       },
     });
 
