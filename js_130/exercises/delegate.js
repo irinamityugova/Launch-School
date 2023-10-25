@@ -1,18 +1,24 @@
 // Write a delegate function that can be used to delegate the behavior of a method or function to another object's method. delegate takes a minimum of two arguments: (1) the object and (2) name of the method on the object. The remaining arguments, if any, are passed — as arguments — to the objects' method that it delegates to.
 
-function delegate(obj, func, ...args) {
-  func.call(obj, ...args);
+function delegate(obj, prop, ...args) {
+  return function() {
+    obj[prop].call(obj, args);
+  };
 }
 
-let a = {
-  name: 'a',
-  f: function(key) {
-    console.log(this[key]);
+let foo = {
+  name: 'test',
+  bar: function(greeting) {
+    console.log(greeting + ' ' + this.name);
   },
 };
 
-let b = {
-  name: 'b',
+let baz = {
+  qux: delegate(foo, 'bar', 'hello'),
 };
 
-delegate(b, a.f, 'name');
+baz.qux();   // logs 'hello test';
+
+foo.bar = function() { console.log('changed'); };
+
+baz.qux();          // logs 'changed'
