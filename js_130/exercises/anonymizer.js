@@ -12,8 +12,12 @@
 
 // Here's a sample for your reference:
 let Account = (function() {
-  function validate(input) {
-      return input === userPassword;
+
+  let users = {};
+  let errMessage = 'Invalid Password';
+
+  function setUser(id, email, password, firstName, lastName) {
+    users[id] = { email, password, firstName, lastName };
   }
 
   function anonymize() {
@@ -25,32 +29,28 @@ let Account = (function() {
     return displayName;
   }
 
-  let [userEmail, userPassword, userFirstName, userLastName] = Array(4);
-
-  let errMessage = 'Invalid Password';
-
   return {
     init(email, password, firstName, lastName) {
-
-      [userEmail, userPassword, userFirstName, userLastName] = [email, password, firstName, lastName];
-
       this.displayName = anonymize();
-      this.reanonymize(password);
-
+      setUser(this.displayName, email, password, firstName, lastName);
       return this;
     },
 
     reanonymize(input) {
-      if (input === userPassword) {
-        this.displayName = anonymize();
+      if (input === users[this.displayName].password) {
+        let user = users[this.displayName];
+        let newDisplayName = anonymize();
+        users[newDisplayName] = user;
+        delete users[this.displayName];
+        this.displayName = newDisplayName;
         return true;
       }
         return errMessage;
     },
 
     resetPassword(input, newPass) {
-      if (validate(input)) {
-        userPassword = newPass;
+      if (input === users[this.displayName].password) {
+        users[this.displayName].password = newPass;
         return true;
       } else {
         return errMessage;
@@ -58,17 +58,17 @@ let Account = (function() {
     },
 
     firstName(input) {
-      if (validate(input)) return userFirstName;
+      if (input === users[this.displayName].password) return users[this.displayName].firstName;
       return errMessage;
     },
 
     lastName(input) {
-      if (validate(input)) return userLastName;
+      if (input === users[this.displayName].password) return users[this.displayName].lastName;
       return errMessage;
     },
 
     email(input) {
-      if (validate(input)) return userEmail;
+      if (input === users[this.displayName].password) return users[this.displayName].email;
       return errMessage;
     },
   };
@@ -84,12 +84,12 @@ console.log(fooBar.resetPassword('123', 'abc'))    // logs 'Invalid Password'
 console.log(fooBar.resetPassword('123456', 'abc')) // logs true
 
 let displayName = fooBar.displayName;
-fooBar.reanonymize('abc');                         // returns true
+console.log(fooBar.reanonymize('abc'));                         // logs true
 console.log(displayName === fooBar.displayName);   // logs false
 
 let bazQux = Object.create(Account).init('baz@qux.com', '123456', 'baz', 'qux');
 // Note that the following two lines of code are correct as written.
 // There are no mistakes. We are attempting to demonstrate that the
 // code does not work as might be intended.
-console.log(fooBar.firstName('123456'));           // logs 'baz' but should log foo.
-console.log(fooBar.email('123456'));               // 'baz@qux.com' but should 'foo@bar.com'
+console.log(fooBar.firstName('abc'));           // logs 'baz' but should log foo.
+console.log(fooBar.email('abc'));               // 'baz@qux.com' but should 'foo@bar.com'
