@@ -15,7 +15,9 @@ const ItemManager = (function() {
 
     create(name, category, quantity) {
       if(!validate(name, category, quantity)) return false;
-      items[makeSKU(name, category)] = {
+      let skuCode = makeSKU(name, category);
+      items[skuCode] = {
+        skuCode,
         name,
         category,
         quantity,
@@ -42,7 +44,7 @@ const ItemManager = (function() {
     },
 
     itemsInCategory(category) {
-      return category + ": " + Object.values(items).filter(item => item.category === category).map(item => item.name).join(", ");;
+      return category + ": " + Object.values(items).filter(item => item.category === category).map(item => item.name).join(", ");
     },
 
     findItem(SKU) {
