@@ -5,11 +5,33 @@ Problem
 Digit (Number) => Roman numeral (String)
 
 Rules
-- if the next numeral
+- many many if's and's and but's
 
+Data Structure: Array.
 574 (total) => DLXXIV
 [500, 50, 10, 10, -1, 5]
 
+Algorithm
+Create a dictionary
+
+Get the left number
+Get the zeroes by using 10**pow
+Save the digit as a total
+
+For each left num,
+  Get the qualified keys:
+    If there is more than one key (ex. III),
+      Dig deep into recursion until all keys are added
+    Subtract the key from the total to know when to quit.
+
+Grab the keys,
+For each,
+  Look at the dictionary,
+  Pick out the right letters,
+Put letters together
+Vuala!
+
+Did I make my life 50 extra lines of code harder?
 */
 
 module.exports = class RomanNumeral {
