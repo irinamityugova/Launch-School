@@ -5,35 +5,35 @@ describe("Scrabble", () => {
     expect(new Scrabble('').score()).toBe(0);
   });
 
-  xtest("whitespace scores zero", () => {
+  test("whitespace scores zero", () => {
     expect(new Scrabble(" \t\n").score()).toBe(0);
   });
 
-  xtest("nil scores zero", () => {
+  test("nil scores zero", () => {
     expect(new Scrabble(null).score()).toBe(0);
   });
 
-  xtest("scores very short word", () => {
+  test("scores very short word", () => {
     expect(new Scrabble('a').score()).toBe(1);
   });
 
-  xtest("scores other very short word", () => {
+  test("scores other very short word", () => {
     expect(new Scrabble('f').score()).toBe(4);
   });
 
-  xtest("simple word scores the number of letters", () => {
+  test("simple word scores the number of letters", () => {
     expect(new Scrabble('street').score()).toBe(6);
   });
 
-  xtest("complicated words score more", () => {
+  test("complicated words score more", () => {
     expect(new Scrabble('quirky').score()).toBe(22);
   });
 
-  xtest("scores are case-insensitive", () => {
+  test("scores are case-insensitive", () => {
     expect(new Scrabble('OXYPHENBUTAZONE').score()).toBe(41);
   });
 
-  xtest("convenient scoring", () => {
+  test("convenient scoring", () => {
     expect(Scrabble.score('alacrity')).toBe(13);
   });
 });
